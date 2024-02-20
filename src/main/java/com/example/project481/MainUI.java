@@ -17,5 +17,5 @@ public class MainUI extends BorderPane {
         // add subscribers
 
         setCenter(view);
-    };
+    }
 }

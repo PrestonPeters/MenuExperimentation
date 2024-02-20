@@ -1,8 +1,5 @@
 package com.example.project481;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-
 public class Controller {
     InteractionModel iModel;
     Model model;
