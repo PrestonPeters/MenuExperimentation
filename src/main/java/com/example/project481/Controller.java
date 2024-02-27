@@ -2,6 +2,7 @@ package com.example.project481;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 public class Controller {
     InteractionModel iModel;
@@ -27,9 +28,15 @@ public class Controller {
 
     public void handleButtonClicked() {}
 
-    public void handleMouseMoved() {}
+    public void handleMouseMoved(MouseEvent event) {
+        // STUB
+        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
+    }
 
-    public void handleMousePressed() {}
+    public void handleMousePressed(MouseEvent event) {
+        // STUB
+        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
+    }
 
     public void handleKeyPressed(KeyEvent event) {
         switch (keyState) {
