@@ -10,7 +10,6 @@ public class Controller {
     MenuMode menuMode;
     KeyState keyState;
     public enum MenuMode { NONE, LINEAR, RADIAL, GRID, SCROLL };
-
     public enum KeyState { NO_CTRL, CTRL_HELD };
 
     public Controller() {
