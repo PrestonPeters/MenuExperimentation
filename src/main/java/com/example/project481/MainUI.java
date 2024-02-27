@@ -16,6 +16,6 @@ public class MainUI extends BorderPane {
 
         // add subscribers
 
-        setCenter(view);
+        this.getChildren().add(view);
     }
 }
