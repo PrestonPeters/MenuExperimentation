@@ -36,7 +36,7 @@ public class Controller {
 
     public void handleMousePressed(MouseEvent event) {
         // STUB
-        System.out.println("MouseX: " + event.getX() + ", MouseY: " + event.getY());
+        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
     }
 
     public void handleKeyPressed(KeyEvent event) {
