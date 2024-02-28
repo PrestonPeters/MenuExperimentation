@@ -8,7 +8,7 @@ public class MainUI extends BorderPane {
         Model model = new Model();
         InteractionModel iModel = new InteractionModel();
         View view = new View();
-        Controller controller = new Controller();
+        Controller controller = new Controller(view);
 
         view.setUpEvents(controller);
         controller.setModel(model);
@@ -16,6 +16,6 @@ public class MainUI extends BorderPane {
 
         // add subscribers
 
-        this.getChildren().add(view);
+        this.setCenter(view);
     }
 }
