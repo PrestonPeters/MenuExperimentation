@@ -12,8 +12,6 @@ public class MainUI extends BorderPane {
         Controller controller = new Controller();
 
         view.setUpEvents(controller);
-//        setOnMousePressed(controller::handleMousePressed);
-//        setOnMouseMoved(controller::handleMouseMoved);
         controller.setModel(model);
         controller.setInteractionModel(iModel);
 
