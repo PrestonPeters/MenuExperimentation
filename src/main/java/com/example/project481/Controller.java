@@ -27,14 +27,15 @@ public class Controller {
 
     public void handleButtonClicked() {}
 
-    public void handleMouseMoved(MouseEvent event) {
+    public void handleMouseMoved(MouseEvent e) {
         // STUB
-        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
+//        System.out.println("mouseX: " + e.getX() + ", mouseY: " + e.getY());
     }
 
-    public void handleMousePressed(MouseEvent event) {
+    public void handleMousePressed(MouseEvent e) {
         // STUB
-        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
+        MenuItem result = model.checkForHit(e.getX(), e.getY());
+        if (result != null) System.out.println(result.getText());
     }
 
     public void handleKeyPressed(KeyEvent event) {
