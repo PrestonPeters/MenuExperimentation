@@ -36,8 +36,20 @@ public class Controller {
 
     public void handleMousePressed(MouseEvent e) {
         // STUB
-        MenuItem result = model.checkForHit(e.getX(), e.getY());
-        if (result != null) System.out.println(result.getText());
+        switch (menuMode) {
+            case LINEAR:
+                // STUB
+
+            case RADIAL:
+                MenuItem result = model.checkForHit(e.getX(), e.getY());
+                if (result != null) System.out.println(result.getText());
+
+            case GRID:
+                // STUB
+
+            case SCROLL:
+                // STUB
+        }
     }
 
     public void handleKeyPressed(KeyEvent event) {
