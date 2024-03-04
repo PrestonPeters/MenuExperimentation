@@ -2,19 +2,29 @@ package com.example.project481;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.geometry.Insets;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
+import javafx.scene.shape.*;
+import javafx.scene.control.Label;
+import javafx.geometry.Pos;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
     GraphicsContext gc;
+    private Label menuModeLabel;
+
     public View() {
         setFocusTraversable(true);
         canvas = new Canvas(800, 800);
         gc = canvas.getGraphicsContext2D();
         this.getChildren().add(canvas);
         draw();
+        menuModeLabel = new Label("No menu mode selected"); // Initial message
+        this.getChildren().add(menuModeLabel); // Add label to the view
+
+        StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
+        StackPane.setMargin(menuModeLabel, new Insets(10));
     }
 
     public void setUpEvents(Controller controller) {
@@ -24,17 +34,52 @@ public class View extends StackPane implements Subscriber {
         this.setOnMouseMoved(controller::handleMouseMoved);
     }
 
-    public void draw() {
-        gc.setStroke(Color.BLACK);
-        for (int i = 0; i < 8; i++) {
-            gc.strokeArc(300, 300, 200, 200, i * 360, (i + 1) * 360, ArcType.ROUND);
-            double angleRadians = Math.toRadians((i + 1) * (360.0 / 8.0));
-            double x = 400 + 100 * Math.cos(angleRadians);
-            double y = 400 + 100 * Math.sin(angleRadians);
-
-            gc.strokeLine(400, 400, x, y);
-        }
-    }
+    public void draw(){}
 
     public void receiveNotification(String channel, Object message){}
+
+    // Method to update the displayed menu mode in the label
+    public void updateMenuMode(Controller.MenuMode menuMode) {
+        this.getChildren().clear(); // Clear other menu items
+        this.getChildren().add(menuModeLabel); // Add label back to the view
+
+
+        switch (menuMode) {
+            case LINEAR:
+                menuModeLabel.setText("Linear menu selected");
+                break;
+            case RADIAL:
+                menuModeLabel.setText("Radial menu selected");
+
+                // building the inside and outside circle for the menu
+                // in the future we can make the outside circle disappear until click
+                Circle center = new Circle(150, 150, 50, Color.WHITE);
+                center.setStroke(Color.BLACK);
+                center.setStrokeWidth(2);
+
+                Circle outsideCircle = new Circle(150, 150, 150, Color.WHITE);
+                outsideCircle.setStroke(Color.BLACK);
+                outsideCircle.setStrokeWidth(1);
+
+                // label for inside main circle
+                Label centerLabel = new Label("Base Item");
+                centerLabel.setAlignment(Pos.CENTER);
+
+                Line line1 = new Line(300, 0, 300, 300);
+                Line line2 = new Line(0, 150, 300, 150);
+
+                this.getChildren().addAll(outsideCircle, line1, line2, center, centerLabel);
+
+                break;
+            case GRID:
+                menuModeLabel.setText("Grid menu selected");
+                break;
+            case SCROLL:
+                menuModeLabel.setText("Scroll menu selected");
+                break;
+            default:
+                menuModeLabel.setText("No menu mode selected");
+                break;
+        }
+    }
 }

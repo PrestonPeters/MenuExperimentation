@@ -1,7 +1,6 @@
 package com.example.project481;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
 
 public class MainUI extends BorderPane {
     public MainUI() {
@@ -9,7 +8,7 @@ public class MainUI extends BorderPane {
         Model model = new Model();
         InteractionModel iModel = new InteractionModel();
         View view = new View();
-        Controller controller = new Controller();
+        Controller controller = new Controller(view);
 
         view.setUpEvents(controller);
         controller.setModel(model);
@@ -17,7 +16,6 @@ public class MainUI extends BorderPane {
 
         // add subscribers
 
-        setTop(view);
-        setAlignment(view, Pos.TOP_LEFT);
+        this.setCenter(view);
     }
 }
