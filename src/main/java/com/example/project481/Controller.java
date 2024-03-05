@@ -68,6 +68,8 @@ public class Controller {
                     else if (integerPressed == 3) menuMode = MenuMode.GRID;
                     else menuMode = MenuMode.SCROLL;
 
+                    iModel.setMenuMode(menuMode);
+
                     System.out.println(menuMode);
                 }
         }
