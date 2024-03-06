@@ -4,35 +4,29 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Insets;
 import javafx.scene.layout.StackPane;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
-import javafx.geometry.Pos;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
     GraphicsContext gc;
-    private Label menuModeLabel;
 
     Controller.MenuMode menuMode;
     ArrayList<MenuItem> menuItems;
-    // private MenuModeLabel menuModeLabel;
+     private MenuModeLabel menuModeLabel;
     public View() {
         setFocusTraversable(true);
         menuModeLabel = new MenuModeLabel(); // Create an instance of MenuModeLabel
         this.getChildren().add(menuModeLabel); // Add the label to the view
-        StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
-        StackPane.setMargin(menuModeLabel, new Insets(10));
+        this.menuMode = Controller.MenuMode.NONE;
         canvas = new Canvas(800, 800);
         gc = canvas.getGraphicsContext2D();
         this.getChildren().add(canvas);
         draw();
-        menuModeLabel = new Label("No menu mode selected"); // Initial message
-        this.getChildren().add(menuModeLabel); // Add label to the view
 
         StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
         StackPane.setMargin(menuModeLabel, new Insets(10));
@@ -109,7 +103,8 @@ public class View extends StackPane implements Subscriber {
             }
             case "menuItems" -> {
                 // when menuItem list changes
-                this.menuItems = (ArrayList<MenuItem>) message;
+                Menu menu = (Menu) message;
+                this.menuItems = menu.getMenuItems();
                 draw();
             }
         }

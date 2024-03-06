@@ -8,8 +8,7 @@ import java.util.Map;
 public class PublishSubscribe {
 
     Map<String, List<Subscriber>> channelSubscribers = new HashMap<>();
-    public PublishSubscribe() {
-    }
+    public PublishSubscribe() {}
 
     public void createChannel(String channel) {
         if (!channelSubscribers.containsKey(channel)) {

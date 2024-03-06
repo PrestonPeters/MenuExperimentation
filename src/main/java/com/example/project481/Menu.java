@@ -1,9 +1,9 @@
 package com.example.project481;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class Menu {
-    private List<MenuItem> menuItems;
+    private ArrayList<MenuItem> menuItems;
 
     public Menu() {
         menuItems = new ArrayList<>();
@@ -12,5 +12,9 @@ public class Menu {
             menuItems.add(new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, 4));
     }
 
-    public List<MenuItem> getMenuItems() { return menuItems; }
+    public ArrayList<MenuItem> getMenuItems() { return menuItems; }
+
+    public void addMenuItem(String text) {
+        menuItems.add(new MenuItem(text));
+    }
 }
