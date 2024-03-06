@@ -91,6 +91,8 @@ public class Controller {
                         menuMode = MenuMode.NONE;
                     }
 
+                    iModel.setMenuMode(menuMode);
+
                     System.out.println(menuMode);
 
                     // Update the view with the selected menu mode

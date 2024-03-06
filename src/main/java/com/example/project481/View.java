@@ -4,6 +4,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Insets;
 import javafx.scene.layout.StackPane;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
+import java.util.ArrayList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
@@ -14,8 +18,15 @@ public class View extends StackPane implements Subscriber {
     GraphicsContext gc;
     private Label menuModeLabel;
 
+    Controller.MenuMode menuMode;
+    ArrayList<MenuItem> menuItems;
+    // private MenuModeLabel menuModeLabel;
     public View() {
         setFocusTraversable(true);
+        menuModeLabel = new MenuModeLabel(); // Create an instance of MenuModeLabel
+        this.getChildren().add(menuModeLabel); // Add the label to the view
+        StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
+        StackPane.setMargin(menuModeLabel, new Insets(10));
         canvas = new Canvas(800, 800);
         gc = canvas.getGraphicsContext2D();
         this.getChildren().add(canvas);
@@ -34,9 +45,15 @@ public class View extends StackPane implements Subscriber {
         this.setOnMouseMoved(controller::handleMouseMoved);
     }
 
-    public void draw(){}
-
-    public void receiveNotification(String channel, Object message){}
+    public void draw(){
+        switch (menuMode){
+            case LINEAR -> {}
+            case RADIAL -> {}
+            case GRID -> {}
+            case SCROLL -> {}
+            case NONE -> {}
+        }
+    }
 
     // Method to update the displayed menu mode in the label
     public void updateMenuMode(Controller.MenuMode menuMode) {
@@ -80,6 +97,21 @@ public class View extends StackPane implements Subscriber {
             default:
                 menuModeLabel.setText("No menu mode selected");
                 break;
+        }
+    }
+    public void receiveNotification(String channel, Object message){
+        switch (channel){
+            case "menuMode" -> {
+                // when menu mode changes
+                this.menuMode = (Controller.MenuMode) message;
+                menuModeLabel.updateMenuModeLabel(this.menuMode);
+                draw();
+            }
+            case "menuItems" -> {
+                // when menuItem list changes
+                this.menuItems = (ArrayList<MenuItem>) message;
+                draw();
+            }
         }
     }
 }
