@@ -91,7 +91,7 @@ public class Controller {
                         menuMode = MenuMode.NONE;
                     }
 
-                    model.resetMenuItems(menuMode);
+                    model.setMenuItems(menuMode);
                     iModel.setMenuMode(menuMode);
 
 
