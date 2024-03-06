@@ -17,6 +17,6 @@ public class MainUI extends BorderPane {
         pubsub.addSubscriber("menuMode", view);
         pubsub.addSubscriber("menuItems", view);
 
-        this.getChildren().add(view);
+        this.setCenter(view);
     }
 }

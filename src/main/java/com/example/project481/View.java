@@ -1,14 +1,21 @@
 package com.example.project481;
 
 import javafx.scene.layout.StackPane;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 
 public class View extends StackPane implements Subscriber {
     Controller.MenuMode menuMode;
     ArrayList<MenuItem> menuItems;
+    private MenuModeLabel menuModeLabel;
     public View() {
         setFocusTraversable(true);
+        menuModeLabel = new MenuModeLabel(); // Create an instance of MenuModeLabel
+        this.getChildren().add(menuModeLabel); // Add the label to the view
+        StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
+        StackPane.setMargin(menuModeLabel, new Insets(10));
     }
 
     public void setUpEvents(Controller controller) {
@@ -33,6 +40,7 @@ public class View extends StackPane implements Subscriber {
             case "menuMode" -> {
                 // when menu mode changes
                 this.menuMode = (Controller.MenuMode) message;
+                menuModeLabel.updateMenuModeLabel(this.menuMode);
                 draw();
             }
             case "menuItems" -> {
