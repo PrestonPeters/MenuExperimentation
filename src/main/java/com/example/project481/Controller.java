@@ -11,10 +11,12 @@ public class Controller {
     KeyState keyState;
     public enum MenuMode { NONE, LINEAR, RADIAL, GRID, SCROLL };
     public enum KeyState { NO_CTRL, CTRL_HELD };
+    private View view;
 
-    public Controller() {
+    public Controller(View view) {
         menuMode = MenuMode.NONE;
         keyState = KeyState.NO_CTRL;
+        this.view = view;
     }
 
     public void setModel(Model model){
@@ -27,14 +29,27 @@ public class Controller {
 
     public void handleButtonClicked() {}
 
-    public void handleMouseMoved(MouseEvent event) {
+    public void handleMouseMoved(MouseEvent e) {
         // STUB
-        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
+//        System.out.println("mouseX: " + e.getX() + ", mouseY: " + e.getY());
     }
 
-    public void handleMousePressed(MouseEvent event) {
+    public void handleMousePressed(MouseEvent e) {
         // STUB
-        System.out.println("mouseX: " + event.getX() + ", mouseY: " + event.getY());
+        switch (menuMode) {
+            case LINEAR:
+                // STUB
+
+            case RADIAL:
+                MenuItem result = model.checkForHit(e.getX(), e.getY());
+                if (result != null) System.out.println(result.getText());
+
+            case GRID:
+                // STUB
+
+            case SCROLL:
+                // STUB
+        }
     }
 
     public void handleKeyPressed(KeyEvent event) {
@@ -52,7 +67,6 @@ public class Controller {
                         System.out.println(keyCodeToIndex);
                     }
                 }
-
                 break;
 
             case CTRL_HELD:
@@ -63,14 +77,26 @@ public class Controller {
 
                     int integerPressed = event.getCode().getCode() - 48;
 
-                    if (integerPressed == 1) menuMode = MenuMode.LINEAR;
-                    else if (integerPressed == 2) menuMode = MenuMode.RADIAL;
-                    else if (integerPressed == 3) menuMode = MenuMode.GRID;
-                    else menuMode = MenuMode.SCROLL;
+                    if (integerPressed == 1 && menuMode != MenuMode.LINEAR) {
+                        menuMode = MenuMode.LINEAR;
+                    } else if (integerPressed == 2 && menuMode != MenuMode.RADIAL) {
+                        menuMode = MenuMode.RADIAL;
+                    } else if (integerPressed == 3 && menuMode != MenuMode.GRID) {
+                        menuMode = MenuMode.GRID;
+                    } else if (integerPressed == 4 && menuMode != MenuMode.SCROLL) {
+                        menuMode = MenuMode.SCROLL;
+                    } else {
+                        // If the same key is pressed and the current menu mode matches it,
+                        // set menu mode to NONE
+                        menuMode = MenuMode.NONE;
+                    }
 
                     iModel.setMenuMode(menuMode);
 
                     System.out.println(menuMode);
+
+                    // Update the view with the selected menu mode
+                    view.updateMenuMode(menuMode);
                 }
         }
     }

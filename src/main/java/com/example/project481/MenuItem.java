@@ -1,14 +1,17 @@
 package com.example.project481;
 
 public class MenuItem {
-    String text;
+    private String text;
+    private Menu subMenu;
 
-    public MenuItem(String name){
-        this.text = name;
-    }
+    public MenuItem(String text) { this.text = text; }
+
+    public String getText() { return text; }
+
+    public void setSubMenu(Menu subMenu) { this.subMenu = subMenu; }
 
     public boolean contains(double x, double y) {
-        return false;
+        // STUB
+        return true;
     }
-
 }

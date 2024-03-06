@@ -6,8 +6,7 @@ import javafx.stage.Stage;
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) {
-        MainUI root = new MainUI();
-        Scene scene = new Scene(root, 800, 800);
+        Scene scene = new Scene(new MainUI(), 800, 800);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
