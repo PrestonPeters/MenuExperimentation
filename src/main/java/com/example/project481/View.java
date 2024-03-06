@@ -41,27 +41,17 @@ public class View extends StackPane implements Subscriber {
 
     public void draw(){
         switch (menuMode){
-            case LINEAR -> {}
-            case RADIAL -> {}
-            case GRID -> {}
-            case SCROLL -> {}
-            case NONE -> {}
-        }
-    }
-
-    // Method to update the displayed menu mode in the label
-    public void updateMenuMode(Controller.MenuMode menuMode) {
-        this.getChildren().clear(); // Clear other menu items
-        this.getChildren().add(menuModeLabel); // Add label back to the view
-
-
-        switch (menuMode) {
-            case LINEAR:
-                menuModeLabel.setText("Linear menu selected");
-                break;
-            case RADIAL:
-                menuModeLabel.setText("Radial menu selected");
-
+            case LINEAR -> {
+                // building the linear menu
+                for (int i = 0; i < menuItems.size(); i++) {
+                    MenuItem item = menuItems.get(i);
+                    gc.setFill(Color.WHITE);
+                    gc.fillRect(0, i * 50, 100, 50);
+                    gc.setFill(Color.BLACK);
+                    gc.fillText(item.getText(), 10, i * 50 + 30);
+                }
+            }
+            case RADIAL -> {
                 // building the inside and outside circle for the menu
                 // in the future we can make the outside circle disappear until click
                 Circle center = new Circle(150, 150, 50, Color.WHITE);
@@ -80,7 +70,27 @@ public class View extends StackPane implements Subscriber {
                 Line line2 = new Line(0, 150, 300, 150);
 
                 this.getChildren().addAll(outsideCircle, line1, line2, center, centerLabel);
+            }
+            case GRID -> {}
+            case SCROLL -> {}
+            case NONE -> {}
+        }
+    }
 
+    // Method to update the displayed menu mode in the label
+    public void updateMenuMode(Controller.MenuMode menuMode) {
+        this.getChildren().clear(); // Clear other menu items
+        this.getChildren().add(menuModeLabel); // Add label back to the view
+
+
+        switch (menuMode) {
+            case LINEAR:
+                menuModeLabel.setText("Linear menu selected");
+                draw();
+                break;
+            case RADIAL:
+                menuModeLabel.setText("Radial menu selected");
+                draw();
                 break;
             case GRID:
                 menuModeLabel.setText("Grid menu selected");

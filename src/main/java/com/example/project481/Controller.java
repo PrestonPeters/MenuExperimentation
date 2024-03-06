@@ -27,22 +27,22 @@ public class Controller {
         this.iModel = iModel;
     }
 
-    public void handleButtonClicked() {}
-
     public void handleMouseMoved(MouseEvent e) {
         // STUB
-//        System.out.println("mouseX: " + e.getX() + ", mouseY: " + e.getY());
     }
 
     public void handleMousePressed(MouseEvent e) {
         // STUB
+        MenuItem result;
         switch (menuMode) {
             case LINEAR:
-                // STUB
-
-            case RADIAL:
-                MenuItem result = model.checkForHit(e.getX(), e.getY());
+                result = model.checkForHit(e.getX(), e.getY());
                 if (result != null) System.out.println(result.getText());
+                break;
+            case RADIAL:
+                result = model.checkForHit(e.getX(), e.getY());
+                if (result != null) System.out.println(result.getText());
+                break;
 
             case GRID:
                 // STUB
@@ -91,7 +91,9 @@ public class Controller {
                         menuMode = MenuMode.NONE;
                     }
 
+                    model.resetMenuItems(menuMode);
                     iModel.setMenuMode(menuMode);
+
 
                     System.out.println(menuMode);
 
