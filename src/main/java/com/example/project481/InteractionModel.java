@@ -12,4 +12,6 @@ public class InteractionModel {
         this.menuMode = mode;
         pubsub.publish("menuMode", mode);
     }
+
+    public Controller.MenuMode getMenuMode() { return menuMode; }
 }
