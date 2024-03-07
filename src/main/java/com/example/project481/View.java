@@ -7,7 +7,6 @@ import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -45,35 +44,7 @@ public class View extends StackPane implements Subscriber {
     public void draw(){
         switch (menuMode){
             case LINEAR -> {
-                // building the linear menu
-                for (int i = 0; i < menuItems.size(); i++) {
-                    MenuItem item = menuItems.get(i);
-                    gc.setFill(Color.WHITE);
-                    gc.fillRect(0, i * 50, 100, 50);
-                    gc.setFill(Color.BLACK);
-                    gc.fillText(item.getText(), 10, i * 50 + 30);
-                }
-            }
-            case RADIAL -> {
-            case LINEAR -> {}
-            case RADIAL -> {}
-            case GRID -> {}
-            case SCROLL -> {}
-            case NONE -> {}
-        }
-    }
-
-    // Method to update the displayed menu mode in the label
-    public void updateMenuMode(Controller.MenuMode menuMode) {
-        this.getChildren().clear(); // Clear other menu items
-        this.getChildren().add(menuModeLabel); // Add label back to the view
-
-
-        switch (menuMode) {
-            case LINEAR:
                 menuModeLabel.setText("Linear menu selected");
-                menuItems.clear(); // Clear the menuItems array before populating it
-                menuItems.addAll(Arrays.asList(new MenuItem("Item 1"), new MenuItem("Item 2"), new MenuItem("Item 3"), new MenuItem("Item 4")));
 
                 // Example: Displaying linear menu items as rectangles
                 int itemWidth = 100;
@@ -93,17 +64,13 @@ public class View extends StackPane implements Subscriber {
                     itemLabel.setPrefHeight(itemHeight); // Set explicit preferred size for the item label
 
                     StackPane itemContainer = new StackPane(menuItem, itemLabel); // Create a StackPane to encapsulate the rectangle and label
-                    itemContainer.setOnMouseClicked(event -> {
-                        // Handle the click event for the respective menu item
-                        System.out.println("Clicked on item: " + item.getText());
-                    });
 
                     menuVBox.getChildren().add(itemContainer); // Add the item container to the VBox
                 }
 
                 this.getChildren().add(menuVBox); // Add the VBox to the layout
-                break;
-            case RADIAL:
+            }
+            case RADIAL -> {
                 menuModeLabel.setText("Radial menu selected");
 
                 // building the inside and outside circle for the menu
@@ -135,8 +102,6 @@ public class View extends StackPane implements Subscriber {
     public void updateMenuMode(Controller.MenuMode menuMode) {
         this.getChildren().clear(); // Clear other menu items
         this.getChildren().add(menuModeLabel); // Add label back to the view
-
-
         switch (menuMode) {
             case LINEAR:
                 menuModeLabel.setText("Linear menu selected");

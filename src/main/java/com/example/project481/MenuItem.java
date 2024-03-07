@@ -12,6 +12,6 @@ public class MenuItem {
 
     public boolean contains(double x, double y) {
         // STUB
-        return true;
+        return false;
     }
 }

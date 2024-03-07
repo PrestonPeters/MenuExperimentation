@@ -10,10 +10,6 @@ public class Menu {
         menuItems.add(new MenuItem("Item 0"));
         for (int i = 1;  i <= numMenuItems; i++)
             menuItems.add(new MenuItem("Item " + i));
-//        menuItems = new ArrayList<>();
-//        menuItems.add(new RadialMenuItem(true, "Item 0", 0, 150, 50, 400, 400, 4));
-//        for (int i = 1;  i <= numMenuItems; i++)
-//            menuItems.add(new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, 4));
     }
 
     public ArrayList<MenuItem> getMenuItems() { return menuItems; }
@@ -25,8 +21,13 @@ public class Menu {
     public void changeMenuMode(Controller.MenuMode mode){
         switch (mode){
             case LINEAR:
-                for (MenuItem item : menuItems)
-                    item = new LinearMenuItem(item.getText(), 0, 0, 0, 0);
+                int minVBoxHeight = (400 - menuItems.size()/2 * 50)-25; // where the top of the menu will be *change if size is not 800x800
+                int y = minVBoxHeight; // where each item will be placed within the menu
+                for (int i = 0;  i < menuItems.size(); i++) {
+                    menuItems.set(i, new LinearMenuItem("Item " + i, 350, y));
+                    y+=50;
+                };
+
                 break;
             case RADIAL:
                 for (int i = 1;  i < menuItems.size(); i++)
