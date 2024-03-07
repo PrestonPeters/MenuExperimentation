@@ -41,8 +41,9 @@ public class Controller {
                 break;
             case RADIAL:
                 result = model.checkForHit(e.getX(), e.getY());
-                if (result != null) System.out.println(result.getText());
-                break;
+                if (menuMode == MenuMode.RADIAL) {
+                    if (result != null) System.out.println(menuMode + result.getText());
+                }
 
             case GRID:
                 // STUB
