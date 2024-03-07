@@ -7,7 +7,11 @@ public class Model {
         menu = new Menu();
         this.pubsub = pubsub;
         pubsub.createChannel("menuItems");
+    }
 
+    public void makeRadialMenu() {
+        menu.makeRadialMenu();
+        pubsub.publish("menuItems", menu);
     }
 
     public void addMenuItem(String text){

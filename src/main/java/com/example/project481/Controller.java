@@ -30,8 +30,7 @@ public class Controller {
     public void handleButtonClicked() {}
 
     public void handleMouseMoved(MouseEvent e) {
-        // STUB
-//        System.out.println("mouseX: " + e.getX() + ", mouseY: " + e.getY());
+        iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
     }
 
     public void handleMousePressed(MouseEvent e) {
@@ -77,13 +76,14 @@ public class Controller {
 
                     int integerPressed = event.getCode().getCode() - 48;
 
-                    if (integerPressed == 1 && menuMode != MenuMode.LINEAR) {
+                    if (integerPressed == 1) {
                         menuMode = MenuMode.LINEAR;
-                    } else if (integerPressed == 2 && menuMode != MenuMode.RADIAL) {
+                    } else if (integerPressed == 2) {
                         menuMode = MenuMode.RADIAL;
-                    } else if (integerPressed == 3 && menuMode != MenuMode.GRID) {
+                        model.makeRadialMenu();
+                    } else if (integerPressed == 3) {
                         menuMode = MenuMode.GRID;
-                    } else if (integerPressed == 4 && menuMode != MenuMode.SCROLL) {
+                    } else if (integerPressed == 4) {
                         menuMode = MenuMode.SCROLL;
                     } else {
                         // If the same key is pressed and the current menu mode matches it,
@@ -92,11 +92,6 @@ public class Controller {
                     }
 
                     iModel.setMenuMode(menuMode);
-
-                    System.out.println(menuMode);
-
-                    // Update the view with the selected menu mode
-                    view.updateMenuMode(menuMode);
                 }
         }
     }

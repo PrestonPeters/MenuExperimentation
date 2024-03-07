@@ -43,4 +43,18 @@ public class RadialMenuItem extends MenuItem {
 
         return Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)) <= baseItemRadius;
     }
+
+    public boolean isBaseItem() { return isBaseItem; }
+
+    public double getOriginX() { return originX; }
+
+    public double getOriginY() { return originY; }
+
+    public int getIndex() { return index; }
+
+    public int getMenuSize() { return menuSize; }
+
+    public double getBaseItemRadius() { return baseItemRadius; }
+
+    public double getRadius() { return radius; }
 }
