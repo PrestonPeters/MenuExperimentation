@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
+import javafx.scene.text.*;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
@@ -79,6 +80,7 @@ public class View extends StackPane implements Subscriber {
 
                 // The baseItem that is to be added in the center circle is initialized here.
                 Circle baseItem = null;
+                Label baseItemLabel = null;
 
                 // Now each wedge is built individually so they can properly respond to hit detection
                 for (MenuItem item : menuItems) {
@@ -95,6 +97,7 @@ public class View extends StackPane implements Subscriber {
                                         new Color(0.95, 0.95, 0.95, 1));
                         baseItem.setStroke(Color.BLACK);
                         baseItem.setStrokeWidth(3);
+                        baseItemLabel = new Label(radialItem.getText());
                     }
 
                     // If the item is not a base item, draws its wedge and adds it to the hierarchy.
@@ -116,6 +119,7 @@ public class View extends StackPane implements Subscriber {
                     }
                 }
                 this.getChildren().add(baseItem);
+                this.getChildren().add(baseItemLabel);
                 break;
 
             case GRID:

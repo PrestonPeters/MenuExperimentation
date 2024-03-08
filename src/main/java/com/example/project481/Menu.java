@@ -28,7 +28,6 @@ public class Menu {
             case GRID:
                 break;
             case SCROLL:
-                break;
         }
     }
 
@@ -40,7 +39,7 @@ public class Menu {
                 for (int i = 0;  i < menuItems.size(); i++) {
                     menuItems.set(i, new LinearMenuItem("Item " + i, 350, y));
                     y+=50;
-                };
+                }
 
                 break;
             case RADIAL:
