@@ -27,28 +27,13 @@ public class Controller {
         this.iModel = iModel;
     }
 
-    public void handleButtonClicked() {}
-
     public void handleMouseMoved(MouseEvent e) {
         iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
     }
 
     public void handleMousePressed(MouseEvent e) {
-        // STUB
-        switch (menuMode) {
-            case LINEAR:
-                // STUB
-
-            case RADIAL:
-                MenuItem result = model.checkForHit(e.getX(), e.getY());
-                if (result != null) System.out.println(result.getText());
-
-            case GRID:
-                // STUB
-
-            case SCROLL:
-                // STUB
-        }
+        MenuItem result = model.checkForHit(e.getX(), e.getY());
+        if (result != null) System.out.println(menuMode + " " + result.getText());
     }
 
     public void handleKeyPressed(KeyEvent event) {
@@ -80,7 +65,6 @@ public class Controller {
                         menuMode = MenuMode.LINEAR;
                     } else if (integerPressed == 2) {
                         menuMode = MenuMode.RADIAL;
-                        model.makeRadialMenu();
                     } else if (integerPressed == 3) {
                         menuMode = MenuMode.GRID;
                     } else if (integerPressed == 4) {
@@ -92,6 +76,7 @@ public class Controller {
                     }
 
                     iModel.setMenuMode(menuMode);
+                    model.setMenuItems(menuMode);
                 }
         }
     }

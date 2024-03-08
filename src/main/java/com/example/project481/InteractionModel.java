@@ -23,4 +23,6 @@ public class InteractionModel {
     }
 
     public MenuItem getHovering() { return this.hovering; }
+
+    public Controller.MenuMode getMenuMode() { return menuMode; }
 }
