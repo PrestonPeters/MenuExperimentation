@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -81,7 +82,7 @@ public class View extends StackPane implements Subscriber {
 
                 // The baseItem that is to be added in the center circle is initialized here.
                 Circle baseItem = null;
-                Label baseItemLabel = null;
+                Text baseItemLabel = null;
 
                 // Now each wedge is built individually so they can properly respond to hit detection
                 for (MenuItem item : menuItems) {
@@ -98,7 +99,7 @@ public class View extends StackPane implements Subscriber {
                                         new Color(0.95, 0.95, 0.95, 1));
                         baseItem.setStroke(Color.BLACK);
                         baseItem.setStrokeWidth(3);
-                        baseItemLabel = new Label(radialItem.getText());
+                        baseItemLabel = new Text(radialItem.getText());
                     }
 
                     // If the item is not a base item, draws its wedge and adds it to the hierarchy.
@@ -112,11 +113,17 @@ public class View extends StackPane implements Subscriber {
                         wedge.setStroke(Color.BLACK);
                         wedge.setStrokeWidth(2);
 
-                        setTranslation(wedge, radialItem.getIndex(), radialItem.getMenuSize(),
+                        // Making it a StackPane so the Arc and text can be moved together
+                        // TODO - Figure out how to align the text within the wedges
+                        StackPane temp = new StackPane();
+                        setAlignment(wedge, Pos.TOP_LEFT);
+
+                        temp.getChildren().addAll(wedge);
+
+                        setTranslation(temp, radialItem.getIndex(), radialItem.getMenuSize(),
                                 radialItem.getRadius(), radialItem.getOriginX(), radialItem.getOriginY());
 
-                        this.getChildren().add(wedge);
-                        setAlignment(wedge, Pos.TOP_LEFT);
+                        this.getChildren().add(temp);
                     }
                 }
                 this.getChildren().add(baseItem);
@@ -140,7 +147,7 @@ public class View extends StackPane implements Subscriber {
     // This formula was derived by a lot of pen and paper calculations, so I don't have
     // a strong algorithm for it. I will try to clean this up into a neat formula that
     // can use just a single for loop hopefully, but this will work until then.
-    public void setTranslation(Arc wedge, int index, int menuSize,
+    public void setTranslation(StackPane wedge, int index, int menuSize,
                                double radius, double originX, double originY) {
         switch (menuSize) {
             case 3:
