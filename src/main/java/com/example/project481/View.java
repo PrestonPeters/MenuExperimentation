@@ -59,7 +59,8 @@ public class View extends StackPane implements Subscriber {
 
                 for (MenuItem item : menuItems) {
                     Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
-                    menuItem.setFill(Color.WHITE);
+                    if (hovering == item) menuItem.setFill(Color.WHITE);
+                    else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
                     menuItem.setStroke(Color.BLACK);
                     Label itemLabel = new Label(item.getText());
                     itemLabel.setAlignment(Pos.CENTER);
