@@ -3,7 +3,7 @@ package com.example.project481;
 public class RadialMenuItem extends MenuItem {
     private boolean isBaseItem;             // Bool indicating whether this is the central item
     private int index;
-    private int menuSize;                   // How many elements in the menu not including the base item
+    private int menuSize;
     private double baseItemRadius;
     private double radius;
     private double originX, originY;
@@ -43,4 +43,20 @@ public class RadialMenuItem extends MenuItem {
 
         return Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)) <= baseItemRadius;
     }
+
+    public boolean isBaseItem() { return isBaseItem; }
+
+    public double getOriginX() { return originX; }
+
+    public double getOriginY() { return originY; }
+
+    public int getIndex() { return index; }
+
+    public int getMenuSize() { return menuSize; }
+
+    public void incrementMenuSize() { menuSize++; }
+
+    public double getBaseItemRadius() { return baseItemRadius; }
+
+    public double getRadius() { return radius; }
 }

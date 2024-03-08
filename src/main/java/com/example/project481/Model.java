@@ -4,14 +4,13 @@ public class Model {
     private Menu menu;
     private final PublishSubscribe pubsub;
     public Model(PublishSubscribe pubsub){
-        menu = new Menu(4);
+        menu = new Menu(8);
         this.pubsub = pubsub;
         pubsub.createChannel("menuItems");
-
     }
 
-    public void addMenuItem(String text){
-        menu.addMenuItem(text);
+    public void addMenuItem(String text, Controller.MenuMode menuMode){
+        menu.addMenuItem(text, menuMode);
         pubsub.publish("menuItems", menu);
     }
 
@@ -27,6 +26,6 @@ public class Model {
     public void setMenuItems(Controller.MenuMode mode){
         menu.changeMenuMode(mode);
         pubsub.publish("menuItems", menu);
-    };
+    }
 
 }

@@ -12,18 +12,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
+import javafx.scene.text.*;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
     GraphicsContext gc;
 
+    MenuItem hovering;
     Controller.MenuMode menuMode;
-    ArrayList<MenuItem> menuItems = new ArrayList<>();
+    ArrayList<MenuItem> menuItems;
     private MenuModeLabel menuModeLabel;
     public View() {
         setFocusTraversable(true);
+        menuItems = new ArrayList<>();
         menuModeLabel = new MenuModeLabel(); // Create an instance of MenuModeLabel
-        this.getChildren().add(menuModeLabel); // Add the label to the view
         this.menuMode = Controller.MenuMode.NONE;
         canvas = new Canvas(800, 800);
         gc = canvas.getGraphicsContext2D();
@@ -42,9 +44,10 @@ public class View extends StackPane implements Subscriber {
     }
 
     public void draw(){
-        switch (menuMode){
-            case LINEAR -> {
+        switch (menuMode) {
+            case LINEAR:
                 menuModeLabel.setText("Linear menu selected");
+                this.getChildren().add(menuModeLabel);
 
                 // Example: Displaying linear menu items as rectangles
                 int itemWidth = 100;
@@ -69,71 +72,251 @@ public class View extends StackPane implements Subscriber {
                 }
 
                 this.getChildren().add(menuVBox); // Add the VBox to the layout
-            }
-            case RADIAL -> {
-                menuModeLabel.setText("Radial menu selected");
-
-                // building the inside and outside circle for the menu
-                // in the future we can make the outside circle disappear until click
-                Circle center = new Circle(150, 150, 50, Color.WHITE);
-                center.setStroke(Color.BLACK);
-                center.setStrokeWidth(2);
-
-                Circle outsideCircle = new Circle(150, 150, 150, Color.WHITE);
-                outsideCircle.setStroke(Color.BLACK);
-                outsideCircle.setStrokeWidth(1);
-
-                // label for inside main circle
-                Label centerLabel = new Label("Base Item");
-                centerLabel.setAlignment(Pos.CENTER);
-
-                Line line1 = new Line(300, 0, 300, 300);
-                Line line2 = new Line(0, 150, 300, 150);
-
-                this.getChildren().addAll(outsideCircle, line1, line2, center, centerLabel);
-            }
-            case GRID -> {}
-            case SCROLL -> {}
-            case NONE -> {}
-        }
-    }
-
-    // Method to update the displayed menu mode in the label
-    public void updateMenuMode(Controller.MenuMode menuMode) {
-        this.getChildren().clear(); // Clear other menu items
-        this.getChildren().add(menuModeLabel); // Add label back to the view
-        switch (menuMode) {
-            case LINEAR:
-                menuModeLabel.setText("Linear menu selected");
-                draw();
                 break;
+
             case RADIAL:
-                menuModeLabel.setText("Radial menu selected");
-                draw();
+                menuModeLabel.setText("Radial menu selected.");
+                this.getChildren().add(menuModeLabel);
+
+                // The baseItem that is to be added in the center circle is initialized here.
+                Circle baseItem = null;
+                Label baseItemLabel = null;
+
+                // Now each wedge is built individually so they can properly respond to hit detection
+                for (MenuItem item : menuItems) {
+                    RadialMenuItem radialItem = (RadialMenuItem) item;
+
+                    // If the current item is the base item, then initializes the base item circle,
+                    // but does not add it to the hierarchy. This will be done after all the other
+                    // wedges are drawn so that the baseItem appears above the other items in the
+                    // z ordering.
+                    if (radialItem.isBaseItem()) {
+                        baseItem = new Circle(radialItem.getOriginX(), radialItem.getOriginY(),
+                                radialItem.getBaseItemRadius(),
+                                (hovering == radialItem) ? Color.WHITE :
+                                        new Color(0.95, 0.95, 0.95, 1));
+                        baseItem.setStroke(Color.BLACK);
+                        baseItem.setStrokeWidth(3);
+                        baseItemLabel = new Label(radialItem.getText());
+                    }
+
+                    // If the item is not a base item, draws its wedge and adds it to the hierarchy.
+                    else {
+                        Arc wedge = new Arc(0, 0, radialItem.getRadius(), radialItem.getRadius(),
+                                (radialItem.getIndex() - 1) * (360.0 / radialItem.getMenuSize()),
+                                360.0 / radialItem.getMenuSize());
+                        wedge.setType(ArcType.ROUND);
+                        if (hovering == radialItem) wedge.setFill(Color.WHITE);
+                        else wedge.setFill(new Color(0.925, 0.925, 0.925, 1));
+                        wedge.setStroke(Color.BLACK);
+                        wedge.setStrokeWidth(2);
+
+                        setTranslation(wedge, radialItem.getIndex(), radialItem.getMenuSize(),
+                                radialItem.getRadius(), radialItem.getOriginX(), radialItem.getOriginY());
+
+                        this.getChildren().add(wedge);
+                        setAlignment(wedge, Pos.TOP_LEFT);
+                    }
+                }
+                this.getChildren().add(baseItem);
+                this.getChildren().add(baseItemLabel);
                 break;
+
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
+                this.getChildren().add(menuModeLabel);
                 break;
             case SCROLL:
                 menuModeLabel.setText("Scroll menu selected");
+                this.getChildren().add(menuModeLabel);
                 break;
             default:
                 menuModeLabel.setText("No menu mode selected");
-                break;
+                this.getChildren().add(menuModeLabel);
         }
     }
+
+    // This formula was derived by a lot of pen and paper calculations, so I don't have
+    // a strong algorithm for it. I will try to clean this up into a neat formula that
+    // can use just a single for loop hopefully, but this will work until then.
+    public void setTranslation(Arc wedge, int index, int menuSize,
+                               double radius, double originX, double originY) {
+        switch (menuSize) {
+            case 3:
+                switch (index) {
+                    case 1:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30.0)));
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 2:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(60.0)));
+                        break;
+                    case 3:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30.0)));
+                        wedge.setTranslateY(originY);
+                }
+                break;
+
+            case 4:
+                switch (index) {
+                    case 1:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 2:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 3:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 4:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY);
+                }
+                break;
+
+            case 5:
+                switch (index) {
+                    case 1:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(72)));
+                        break;
+                    case 2:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(54)));
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 3:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(36)));
+                        break;
+                    case 4:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(54)));
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 5:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY);
+                }
+                break;
+
+            case 6:
+                switch (index) {
+                    case 1:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(60)));
+                        break;
+                    case 2:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30)));
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 3:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(60)));
+                        break;
+                    case 4:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 5:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30)));
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 6:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY);
+                }
+                break;
+
+            case 7:
+                switch (index) {
+                    case 1:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(360.0 / 7)));
+                        break;
+                    case 2:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians((360.0 / 7) * 2 - 90)));
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 3:
+                        wedge.setTranslateX(originX - radius * Math.cos(Math.toRadians(180 - (360.0 / 7) * 3)));
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians((360.0 / 7) * (3.0 / 2))));
+                        break;
+                    case 4:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians((360.0 / 7) / 2)));
+                        break;
+                    case 5:
+                        wedge.setTranslateX(originX - radius * Math.cos(Math.toRadians((90 - ((360.0 / 7) * 3 - 90)))));
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 6:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(270 - (360.0 / 7) * 5)));
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 7:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY);
+                }
+                break;
+
+            case 8:
+                switch (index) {
+                    case 1:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(45)));
+                        break;
+                    case 2:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 3:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(45)));
+                        wedge.setTranslateY(originY - radius);
+                        break;
+                    case 4:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(45)));
+                        break;
+                    case 5:
+                        wedge.setTranslateX(originX - radius);
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 6:
+                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(45)));
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 7:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY);
+                        break;
+                    case 8:
+                        wedge.setTranslateX(originX);
+                        wedge.setTranslateY(originY);
+                }
+        }
+    }
+
     public void receiveNotification(String channel, Object message){
-        switch (channel){
+        switch (channel) {
             case "menuMode" -> {
                 // when menu mode changes
+                this.getChildren().clear();
                 this.menuMode = (Controller.MenuMode) message;
                 menuModeLabel.updateMenuModeLabel(this.menuMode);
-                draw();
             }
             case "menuItems" -> {
+                this.getChildren().clear();
                 // when menuItem list changes
                 Menu menu = (Menu) message;
                 this.menuItems = menu.getMenuItems();
+                draw();
+            }
+            case "hovering" -> {
+                this.getChildren().clear();
+                this.hovering = (MenuItem) message;
                 draw();
             }
         }

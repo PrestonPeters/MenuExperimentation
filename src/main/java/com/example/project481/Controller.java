@@ -28,29 +28,12 @@ public class Controller {
     }
 
     public void handleMouseMoved(MouseEvent e) {
-        // STUB
+        iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
     }
 
     public void handleMousePressed(MouseEvent e) {
-        // STUB
-        MenuItem result;
-        switch (menuMode) {
-            case LINEAR:
-                result = model.checkForHit(e.getX(), e.getY());
-                if (result != null) System.out.println(result.getText());
-                break;
-            case RADIAL:
-                result = model.checkForHit(e.getX(), e.getY());
-                if (menuMode == MenuMode.RADIAL) {
-                    if (result != null) System.out.println(menuMode + result.getText());
-                }
-
-            case GRID:
-                // STUB
-
-            case SCROLL:
-                // STUB
-        }
+        MenuItem result = model.checkForHit(e.getX(), e.getY());
+        if (result != null) System.out.println(menuMode + " " + result.getText());
     }
 
     public void handleKeyPressed(KeyEvent event) {
@@ -78,13 +61,13 @@ public class Controller {
 
                     int integerPressed = event.getCode().getCode() - 48;
 
-                    if (integerPressed == 1 && menuMode != MenuMode.LINEAR) {
+                    if (integerPressed == 1) {
                         menuMode = MenuMode.LINEAR;
-                    } else if (integerPressed == 2 && menuMode != MenuMode.RADIAL) {
+                    } else if (integerPressed == 2) {
                         menuMode = MenuMode.RADIAL;
-                    } else if (integerPressed == 3 && menuMode != MenuMode.GRID) {
+                    } else if (integerPressed == 3) {
                         menuMode = MenuMode.GRID;
-                    } else if (integerPressed == 4 && menuMode != MenuMode.SCROLL) {
+                    } else if (integerPressed == 4) {
                         menuMode = MenuMode.SCROLL;
                     } else {
                         // If the same key is pressed and the current menu mode matches it,
@@ -92,14 +75,8 @@ public class Controller {
                         menuMode = MenuMode.NONE;
                     }
 
-                    model.setMenuItems(menuMode);
                     iModel.setMenuMode(menuMode);
-
-
-                    System.out.println(menuMode);
-
-                    // Update the view with the selected menu mode
-                    view.updateMenuMode(menuMode);
+                    model.setMenuItems(menuMode);
                 }
         }
     }
