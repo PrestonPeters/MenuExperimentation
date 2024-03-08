@@ -3,10 +3,12 @@ package com.example.project481;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Insets;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -59,7 +61,8 @@ public class View extends StackPane implements Subscriber {
 
                 for (MenuItem item : menuItems) {
                     Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
-                    menuItem.setFill(Color.WHITE);
+                    if (hovering == item) menuItem.setFill(Color.WHITE);
+                    else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
                     menuItem.setStroke(Color.BLACK);
                     Label itemLabel = new Label(item.getText());
                     itemLabel.setAlignment(Pos.CENTER);
@@ -80,7 +83,7 @@ public class View extends StackPane implements Subscriber {
 
                 // The baseItem that is to be added in the center circle is initialized here.
                 Circle baseItem = null;
-                Label baseItemLabel = null;
+                Text baseItemLabel = null;
 
                 // Now each wedge is built individually so they can properly respond to hit detection
                 for (MenuItem item : menuItems) {
@@ -97,25 +100,34 @@ public class View extends StackPane implements Subscriber {
                                         new Color(0.95, 0.95, 0.95, 1));
                         baseItem.setStroke(Color.BLACK);
                         baseItem.setStrokeWidth(3);
-                        baseItemLabel = new Label(radialItem.getText());
+                        baseItemLabel = new Text(radialItem.getText());
                     }
 
                     // If the item is not a base item, draws its wedge and adds it to the hierarchy.
                     else {
-                        Arc wedge = new Arc(0, 0, radialItem.getRadius(), radialItem.getRadius(),
-                                (radialItem.getIndex() - 1) * (360.0 / radialItem.getMenuSize()),
-                                360.0 / radialItem.getMenuSize());
+                        double startAngle = (radialItem.getIndex() - 1) * (360.0 / radialItem.getMenuSize());
+                        double angleSize = 360.0 / radialItem.getMenuSize();
+                        double radius = radialItem.getRadius();
+                        Arc wedge = new Arc(0, 0, radius, radius, startAngle, angleSize);
                         wedge.setType(ArcType.ROUND);
                         if (hovering == radialItem) wedge.setFill(Color.WHITE);
                         else wedge.setFill(new Color(0.925, 0.925, 0.925, 1));
                         wedge.setStroke(Color.BLACK);
                         wedge.setStrokeWidth(2);
+                        Text wedgeText = new Text(radialItem.getText());
 
-                        setTranslation(wedge, radialItem.getIndex(), radialItem.getMenuSize(),
-                                radialItem.getRadius(), radialItem.getOriginX(), radialItem.getOriginY());
+                        double textX = (radius * 2.0 / 3.0) * Math.sin(Math.toRadians(startAngle + angleSize / 2 + 90))
+                                - wedgeText.getLayoutBounds().getWidth() / 2;
+                        double textY = (radius * 2.0 / 3.0) * Math.cos(Math.toRadians(startAngle + angleSize / 2 + 90));
 
-                        this.getChildren().add(wedge);
-                        setAlignment(wedge, Pos.TOP_LEFT);
+                        Pane temp = new Pane();
+                        temp.getChildren().addAll(wedge, wedgeText);
+                        temp.setTranslateX(400);
+                        temp.setTranslateY(400);
+                        wedgeText.setTranslateX(textX);
+                        wedgeText.setTranslateY(textY);
+
+                        this.getChildren().add(temp);
                     }
                 }
                 this.getChildren().add(baseItem);
@@ -133,169 +145,6 @@ public class View extends StackPane implements Subscriber {
             default:
                 menuModeLabel.setText("No menu mode selected");
                 this.getChildren().add(menuModeLabel);
-        }
-    }
-
-    // This formula was derived by a lot of pen and paper calculations, so I don't have
-    // a strong algorithm for it. I will try to clean this up into a neat formula that
-    // can use just a single for loop hopefully, but this will work until then.
-    public void setTranslation(Arc wedge, int index, int menuSize,
-                               double radius, double originX, double originY) {
-        switch (menuSize) {
-            case 3:
-                switch (index) {
-                    case 1:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30.0)));
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 2:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(60.0)));
-                        break;
-                    case 3:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30.0)));
-                        wedge.setTranslateY(originY);
-                }
-                break;
-
-            case 4:
-                switch (index) {
-                    case 1:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 2:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 3:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 4:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY);
-                }
-                break;
-
-            case 5:
-                switch (index) {
-                    case 1:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(72)));
-                        break;
-                    case 2:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(54)));
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 3:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(36)));
-                        break;
-                    case 4:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(54)));
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 5:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY);
-                }
-                break;
-
-            case 6:
-                switch (index) {
-                    case 1:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(60)));
-                        break;
-                    case 2:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30)));
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 3:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(60)));
-                        break;
-                    case 4:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 5:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(30)));
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 6:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY);
-                }
-                break;
-
-            case 7:
-                switch (index) {
-                    case 1:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(360.0 / 7)));
-                        break;
-                    case 2:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians((360.0 / 7) * 2 - 90)));
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 3:
-                        wedge.setTranslateX(originX - radius * Math.cos(Math.toRadians(180 - (360.0 / 7) * 3)));
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians((360.0 / 7) * (3.0 / 2))));
-                        break;
-                    case 4:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians((360.0 / 7) / 2)));
-                        break;
-                    case 5:
-                        wedge.setTranslateX(originX - radius * Math.cos(Math.toRadians((90 - ((360.0 / 7) * 3 - 90)))));
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 6:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(270 - (360.0 / 7) * 5)));
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 7:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY);
-                }
-                break;
-
-            case 8:
-                switch (index) {
-                    case 1:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(45)));
-                        break;
-                    case 2:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 3:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(45)));
-                        wedge.setTranslateY(originY - radius);
-                        break;
-                    case 4:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY - radius * Math.sin(Math.toRadians(45)));
-                        break;
-                    case 5:
-                        wedge.setTranslateX(originX - radius);
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 6:
-                        wedge.setTranslateX(originX - radius * Math.sin(Math.toRadians(45)));
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 7:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY);
-                        break;
-                    case 8:
-                        wedge.setTranslateX(originX);
-                        wedge.setTranslateY(originY);
-                }
         }
     }
 
