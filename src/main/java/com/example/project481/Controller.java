@@ -13,14 +13,12 @@ public class Controller {
     public enum MenuMode { NONE, LINEAR, RADIAL, GRID, SCROLL };
     public enum KeyState { NO_CTRL, CTRL_HELD };
     public enum DragState { IDLE, ON_BASE_ITEM, DRAGGING };
-    private View view;
     double xOffset, yOffset;
 
-    public Controller(View view) {
+    public Controller() {
         menuMode = MenuMode.NONE;
         keyState = KeyState.NO_CTRL;
         dragState = DragState.IDLE;
-        this.view = view;
     }
 
     public void setModel(Model model){

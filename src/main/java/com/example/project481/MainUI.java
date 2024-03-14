@@ -8,7 +8,7 @@ public class MainUI extends BorderPane {
         Model model = new Model(pubsub);
         InteractionModel iModel = new InteractionModel(pubsub);
         View view = new View();
-        Controller controller = new Controller(view);
+        Controller controller = new Controller();
 
         view.setUpEvents(controller);
         controller.setModel(model);
