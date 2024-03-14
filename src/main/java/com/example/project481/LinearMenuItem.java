@@ -4,8 +4,8 @@ public class LinearMenuItem extends MenuItem {
     private double x;
     private double y;
 
-    public LinearMenuItem(String text, double x, double y){
-        super(text);
+    public LinearMenuItem(String text, boolean isBaseItem, double x, double y){
+        super(text, isBaseItem);
         this.x = x;
         this.y = y;
     }

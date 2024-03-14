@@ -33,7 +33,12 @@ public class Controller {
 
     public void handleMousePressed(MouseEvent e) {
         MenuItem result = model.checkForHit(e.getX(), e.getY());
-        if (result != null) System.out.println(menuMode + " " + result.getText());
+        if (result != null) {
+            System.out.println(menuMode + " " + result.getText());
+            if (result.isBaseItem() && !model.getMenu().isOpen()) model.getMenu().open();
+            else if (result.isBaseItem() && model.getMenu().isOpen()) model.getMenu().close();
+            model.publishMenuItems();
+        }
     }
 
     public void handleKeyPressed(KeyEvent event) {

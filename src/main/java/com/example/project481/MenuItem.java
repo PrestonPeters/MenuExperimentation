@@ -1,10 +1,12 @@
 package com.example.project481;
 
 public class MenuItem {
+    private boolean isBaseItem;
     private String text;
     private Menu subMenu;
 
-    public MenuItem(String text) {
+    public MenuItem(String text, boolean isBaseItem) {
+        this.isBaseItem = isBaseItem;
         this.text = text;
         this.subMenu = null;
     }
@@ -15,6 +17,7 @@ public class MenuItem {
 
     public void setSubMenu(Menu subMenu) { this.subMenu = subMenu; }
 
+    public boolean isBaseItem() { return isBaseItem; }
     public boolean contains(double x, double y) {
         // STUB
         return false;

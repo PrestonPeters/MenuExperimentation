@@ -28,4 +28,5 @@ public class Model {
         pubsub.publish("menuItems", menu);
     }
 
+    public void publishMenuItems() { pubsub.publish("menuItems", menu); }
 }
