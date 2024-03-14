@@ -74,6 +74,10 @@ public class View extends StackPane implements Subscriber {
                     menuVBox.getChildren().add(itemContainer); // Add the item container to the VBox
                 }
 
+                if (menuItems.size() == 1) {
+                    setAlignment(menuVBox, Pos.TOP_LEFT);
+                    menuVBox.setTranslateY(-((LinearMenuItem) menuItems.get(0)).getY() - 25);
+                }
                 this.getChildren().add(menuVBox); // Add the VBox to the layout
                 break;
 
