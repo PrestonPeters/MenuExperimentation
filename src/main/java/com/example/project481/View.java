@@ -101,9 +101,11 @@ public class View extends StackPane implements Subscriber {
                                 (hovering == radialItem) ? Color.WHITE : new Color(0.95, 0.95, 0.95, 1));
                         baseItem.setStroke(Color.BLACK);
                         baseItem.setStrokeWidth(3);
+
                         Text baseItemLabel = new Text(radialItem.getText());
                         baseItemLabel.setTranslateX(-baseItemLabel.getLayoutBounds().getWidth() / 2);
                         baseItemLabel.setTranslateY(baseItemLabel.getLayoutBounds().getHeight() / 5);
+
                         baseItemPane.getChildren().addAll(baseItem, baseItemLabel);
                         baseItemPane.setTranslateX(radialItem.getOriginX());
                         baseItemPane.setTranslateY(radialItem.getOriginY());
