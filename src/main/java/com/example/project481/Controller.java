@@ -9,13 +9,17 @@ public class Controller {
     Model model;
     MenuMode menuMode;
     KeyState keyState;
+    DragState dragState;
     public enum MenuMode { NONE, LINEAR, RADIAL, GRID, SCROLL };
     public enum KeyState { NO_CTRL, CTRL_HELD };
+    public enum DragState { IDLE, ON_BASE_ITEM, DRAGGING };
     private View view;
+    double xOffset, yOffset;
 
     public Controller(View view) {
         menuMode = MenuMode.NONE;
         keyState = KeyState.NO_CTRL;
+        dragState = DragState.IDLE;
         this.view = view;
     }
 
@@ -31,9 +35,33 @@ public class Controller {
         iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
     }
 
+    public void handleMouseDragged(MouseEvent e) {
+        if (dragState == DragState.ON_BASE_ITEM || dragState == DragState.DRAGGING) {
+            dragState = DragState.DRAGGING;
+            model.getMenu().moveRadialMenuItems(e.getX() + xOffset, e.getY() + yOffset);
+            model.publishMenuItems();
+        }
+
+        else iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
+    }
+
     public void handleMousePressed(MouseEvent e) {
         MenuItem result = model.checkForHit(e.getX(), e.getY());
-        if (result != null) {
+
+        if (menuMode == MenuMode.RADIAL && result != null && result.isBaseItem()) {
+            dragState = DragState.ON_BASE_ITEM;
+            xOffset = ((RadialMenuItem) model.getMenu().getMenuItems().get(0)).getOriginX() - e.getX();
+            yOffset = ((RadialMenuItem) model.getMenu().getMenuItems().get(0)).getOriginY() - e.getY();
+        }
+    }
+
+    public void handleMouseReleased(MouseEvent e) {
+        MenuItem result = model.checkForHit(e.getX(), e.getY());
+        if (menuMode == MenuMode.RADIAL && dragState == DragState.DRAGGING)
+            dragState = DragState.IDLE;
+
+        else if (result != null) {
+            dragState = DragState.IDLE;
             System.out.println(menuMode + " " + result.getText());
             if (result.isBaseItem() && !model.getMenu().isOpen()) model.getMenu().open();
             else if (result.isBaseItem() && model.getMenu().isOpen()) model.getMenu().close();
@@ -56,6 +84,7 @@ public class Controller {
                         System.out.println(keyCodeToIndex);
                     }
                 }
+                dragState = DragState.IDLE;
                 break;
 
             case CTRL_HELD:
@@ -83,6 +112,7 @@ public class Controller {
                     iModel.setMenuMode(menuMode);
                     model.setMenuItems(menuMode);
                 }
+                dragState = DragState.IDLE;
         }
     }
 

@@ -42,7 +42,9 @@ public class View extends StackPane implements Subscriber {
         this.setOnKeyPressed(controller::handleKeyPressed);
         this.setOnKeyReleased(controller::handleKeyReleased);
         this.setOnMousePressed(controller::handleMousePressed);
+        this.setOnMouseReleased(controller::handleMouseReleased);
         this.setOnMouseMoved(controller::handleMouseMoved);
+        this.setOnMouseDragged(controller::handleMouseDragged);
     }
 
     public void draw(){

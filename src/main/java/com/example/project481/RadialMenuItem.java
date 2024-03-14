@@ -46,6 +46,11 @@ public class RadialMenuItem extends MenuItem {
 
     public double getOriginY() { return originY; }
 
+    public void setOriginXAndY(double originX, double originY) {
+        this.originX = originX;
+        this.originY = originY;
+    }
+
     public int getIndex() { return index; }
 
     public int getMenuSize() { return menuSize; }

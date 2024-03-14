@@ -56,6 +56,11 @@ public class Menu {
         }
     }
 
+    public void moveRadialMenuItems(double originX, double originY) {
+        for (MenuItem item : menuItems)
+            ((RadialMenuItem) item).setOriginXAndY(originX, originY);
+    }
+
     public boolean isOpen() { return isOpen; }
 
     public void open() { isOpen = true; }
