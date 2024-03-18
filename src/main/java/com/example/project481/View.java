@@ -42,7 +42,9 @@ public class View extends StackPane implements Subscriber {
         this.setOnKeyPressed(controller::handleKeyPressed);
         this.setOnKeyReleased(controller::handleKeyReleased);
         this.setOnMousePressed(controller::handleMousePressed);
+        this.setOnMouseReleased(controller::handleMouseReleased);
         this.setOnMouseMoved(controller::handleMouseMoved);
+        this.setOnMouseDragged(controller::handleMouseDragged);
     }
 
     public void draw(){
@@ -52,8 +54,8 @@ public class View extends StackPane implements Subscriber {
                 this.getChildren().add(menuModeLabel);
 
                 // Example: Displaying linear menu items as rectangles
-                int itemWidth = 100;
-                int itemHeight = 50;
+                double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
+                double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
                 int spacing = 0;
 
                 VBox menuVBox = new VBox(spacing); // Create a VBox to stack the menu items
@@ -74,6 +76,10 @@ public class View extends StackPane implements Subscriber {
                     menuVBox.getChildren().add(itemContainer); // Add the item container to the VBox
                 }
 
+                if (menuItems.size() == 1) {
+                    setAlignment(menuVBox, Pos.TOP_LEFT);
+                    menuVBox.setTranslateY(-((LinearMenuItem) menuItems.get(0)).getY() - 25);
+                }
                 this.getChildren().add(menuVBox); // Add the VBox to the layout
                 break;
 
@@ -82,8 +88,8 @@ public class View extends StackPane implements Subscriber {
                 this.getChildren().add(menuModeLabel);
 
                 // The baseItem that is to be added in the center circle is initialized here.
-                Circle baseItem = null;
-                Text baseItemLabel = null;
+                Pane baseItemPane = new Pane();
+                Pane masterPane = new Pane();
 
                 // Now each wedge is built individually so they can properly respond to hit detection
                 for (MenuItem item : menuItems) {
@@ -94,13 +100,16 @@ public class View extends StackPane implements Subscriber {
                     // wedges are drawn so that the baseItem appears above the other items in the
                     // z ordering.
                     if (radialItem.isBaseItem()) {
-                        baseItem = new Circle(radialItem.getOriginX(), radialItem.getOriginY(),
-                                radialItem.getBaseItemRadius(),
-                                (hovering == radialItem) ? Color.WHITE :
-                                        new Color(0.95, 0.95, 0.95, 1));
+                        Circle baseItem = new Circle(0, 0, radialItem.getBaseItemRadius(),
+                                (hovering == radialItem) ? Color.WHITE : new Color(0.95, 0.95, 0.95, 1));
                         baseItem.setStroke(Color.BLACK);
                         baseItem.setStrokeWidth(3);
-                        baseItemLabel = new Text(radialItem.getText());
+                        Text baseItemLabel = new Text(radialItem.getText());
+                        baseItemLabel.setTranslateX(-baseItemLabel.getLayoutBounds().getWidth() / 2);
+                        baseItemLabel.setTranslateY(baseItemLabel.getLayoutBounds().getHeight() / 5);
+                        baseItemPane.getChildren().addAll(baseItem, baseItemLabel);
+                        baseItemPane.setTranslateX(radialItem.getOriginX());
+                        baseItemPane.setTranslateY(radialItem.getOriginY());
                     }
 
                     // If the item is not a base item, draws its wedge and adds it to the hierarchy.
@@ -122,16 +131,17 @@ public class View extends StackPane implements Subscriber {
 
                         Pane temp = new Pane();
                         temp.getChildren().addAll(wedge, wedgeText);
-                        temp.setTranslateX(400);
-                        temp.setTranslateY(400);
+                        temp.setTranslateX(radialItem.getOriginX());
+                        temp.setTranslateY(radialItem.getOriginY());
                         wedgeText.setTranslateX(textX);
                         wedgeText.setTranslateY(textY);
 
-                        this.getChildren().add(temp);
+                        masterPane.getChildren().add(temp);
                     }
                 }
-                this.getChildren().add(baseItem);
-                this.getChildren().add(baseItemLabel);
+
+                masterPane.getChildren().add(baseItemPane);
+                this.getChildren().add(masterPane);
                 break;
 
             case GRID:

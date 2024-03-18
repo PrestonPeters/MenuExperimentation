@@ -1,7 +1,6 @@
 package com.example.project481;
 
 public class RadialMenuItem extends MenuItem {
-    private boolean isBaseItem;             // Bool indicating whether this is the central item
     private int index;
     private int menuSize;
     private double baseItemRadius;
@@ -10,8 +9,7 @@ public class RadialMenuItem extends MenuItem {
 
     public RadialMenuItem(boolean isBaseItem, String text, int index, double radius, double baseItemRadius,
                           double originX, double originY, int menuSize) {
-        super(text);
-        this.isBaseItem = isBaseItem;
+        super(text, isBaseItem);
         this.index = index;
         this.radius = radius;
         this.baseItemRadius = baseItemRadius;
@@ -22,7 +20,7 @@ public class RadialMenuItem extends MenuItem {
 
     @Override
     public boolean contains(double x, double y) {
-        if (isBaseItem) return baseItemContains(x, y);
+        if (isBaseItem()) return baseItemContains(x, y);
 
         double xDifference = x - originX;
         double yDifference = y - originY;
@@ -44,11 +42,14 @@ public class RadialMenuItem extends MenuItem {
         return Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)) <= baseItemRadius;
     }
 
-    public boolean isBaseItem() { return isBaseItem; }
-
     public double getOriginX() { return originX; }
 
     public double getOriginY() { return originY; }
+
+    public void setOriginXAndY(double originX, double originY) {
+        this.originX = originX;
+        this.originY = originY;
+    }
 
     public int getIndex() { return index; }
 
