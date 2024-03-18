@@ -56,12 +56,12 @@ public class View extends StackPane implements Subscriber {
                 // Example: Displaying linear menu items as rectangles
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
-                int spacing = 0;
 
-                VBox menuVBox = new VBox(spacing); // Create a VBox to stack the menu items
-                menuVBox.setAlignment(Pos.CENTER); // Center align the items within the VBox
+                Pane menuBox = new Pane();
+                setAlignment(menuBox, Pos.TOP_LEFT);
 
                 for (MenuItem item : menuItems) {
+                    Pane tempPane = new Pane();
                     Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
                     if (hovering == item) menuItem.setFill(Color.WHITE);
                     else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
@@ -71,16 +71,13 @@ public class View extends StackPane implements Subscriber {
                     itemLabel.setPrefWidth(itemWidth);
                     itemLabel.setPrefHeight(itemHeight); // Set explicit preferred size for the item label
 
-                    StackPane itemContainer = new StackPane(menuItem, itemLabel); // Create a StackPane to encapsulate the rectangle and label
-
-                    menuVBox.getChildren().add(itemContainer); // Add the item container to the VBox
+                    tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
+                    tempPane.setTranslateX(((LinearMenuItem) item).getX());
+                    tempPane.setTranslateY(((LinearMenuItem) item).getY());
+                    menuBox.getChildren().add(tempPane);
                 }
 
-                if (menuItems.size() == 1) {
-                    setAlignment(menuVBox, Pos.TOP_LEFT);
-                    menuVBox.setTranslateY(-((LinearMenuItem) menuItems.get(0)).getY() - 25);
-                }
-                this.getChildren().add(menuVBox); // Add the VBox to the layout
+                this.getChildren().add(menuBox); // Add the VBox to the layout
                 break;
 
             case RADIAL:
@@ -104,9 +101,11 @@ public class View extends StackPane implements Subscriber {
                                 (hovering == radialItem) ? Color.WHITE : new Color(0.95, 0.95, 0.95, 1));
                         baseItem.setStroke(Color.BLACK);
                         baseItem.setStrokeWidth(3);
+
                         Text baseItemLabel = new Text(radialItem.getText());
                         baseItemLabel.setTranslateX(-baseItemLabel.getLayoutBounds().getWidth() / 2);
                         baseItemLabel.setTranslateY(baseItemLabel.getLayoutBounds().getHeight() / 5);
+
                         baseItemPane.getChildren().addAll(baseItem, baseItemLabel);
                         baseItemPane.setTranslateX(radialItem.getOriginX());
                         baseItemPane.setTranslateY(radialItem.getOriginY());
