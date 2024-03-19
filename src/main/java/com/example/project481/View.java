@@ -88,7 +88,7 @@ public class View extends StackPane implements Subscriber {
                 Pane baseItemPane = new Pane();
                 Pane masterPane = new Pane();
 
-                // Now each wedge is built individually, so they can properly respond to hit detection
+                // Now each wedge is built individually so they can properly respond to hit detection
                 for (MenuItem item : menuItems) {
                     RadialMenuItem radialItem = (RadialMenuItem) item;
 
