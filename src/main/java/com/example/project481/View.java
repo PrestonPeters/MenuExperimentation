@@ -149,9 +149,6 @@ public class View extends StackPane implements Subscriber {
                 itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
                 itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
 
-//                menuBox = new Pane();
-//                setAlignment(menuBox, Pos.TOP_LEFT);
-
                 // numCols and numRows *should* be the same and create a square grid
                 int numCols = (int)Math.ceil(sqrt(menuItems.size()));
                 int numRows = (int)Math.ceil(menuItems.size() / numCols);
@@ -172,7 +169,7 @@ public class View extends StackPane implements Subscriber {
                             // if there are not enough items to fill the grid, fill the remaining space with empty rectangles
                             menuItem.setFill(new Color(0.55, 0.55, 0.55, 1));
                             itemLabel = new Label("");
-                        } else if (hovering == menuItems.get(i*numCols + j)){
+                        } else if (hovering == menuItems.get(i*numCols + j)) {
                             menuItem.setFill(Color.WHITE);
                         } else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
                         menuItem.setStroke(Color.BLACK);
