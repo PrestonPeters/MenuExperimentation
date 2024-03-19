@@ -43,10 +43,6 @@ public class Menu {
                         150, 50, 400, 400, menuItems.size()));
                 break;
             case GRID:
-//                for (MenuItem item : menuItems) ((GridMenuItem) item).moveUp();
-//                double lastX = ((GridMenuItem) menuItems.get(menuItems.size() - 1)).getX();
-//                menuItems.add(new GridMenuItem(text, (menuItems.isEmpty()), lastX + 100, 350, 100, 50));
-                break;
             case SCROLL:
         }
     }
@@ -76,8 +72,7 @@ public class Menu {
                 int minBoxWidth = 400 - (numCols * 100) / 2; // where the left of the menu will be
                 int minBoxHeight = (400 - (numRows * 50) / 2)-50; // where the top of the menu will be
 
-                y = minBoxHeight; // where each item will be placed within the menu
-               //menuItems.set(0, new GridMenuItem("Item 0", true, 350, y, 100, 50));
+                y = minBoxHeight;
                 for (int i=0; i<numRows; i++) {
                     int x = minBoxWidth;
                     y += 50;
