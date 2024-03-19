@@ -17,7 +17,6 @@ public class InteractionModel {
     public void setMenuMode(Controller.MenuMode mode) {
         this.menuMode = mode;
         pubsub.publish("menuMode", mode);
-        reset();
     }
 
     public void setHovering(MenuItem hovering) {
@@ -43,7 +42,7 @@ public class InteractionModel {
         pubsub.publish("scrollBar", scrollBar);
     }
 
-    public void reset() {
+    public void resetScrollAndHovering() {
         scrollBar = null;
         hovering = null;
         pubsub.publish("scrollBar", null);

@@ -71,7 +71,10 @@ public class Controller {
                     ScrollBar scrollBar = iModel.getScrollBar();
                     result = model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY());
                     System.out.println(menuMode + " " + result.getText());
-                    if (result.isBaseItem()) model.toggleMenuOpen();
+                    if (result.isBaseItem()) {
+                        model.toggleMenuOpen();
+                        iModel.resetScrollAndHovering();
+                    }
                 }
             }
             return;
@@ -129,8 +132,11 @@ public class Controller {
                         menuMode = MenuMode.NONE;
                     }
 
-                    model.setMenuItems(menuMode);
                     iModel.setMenuMode(menuMode);
+                    model.setMenuItems(menuMode);
+                    model.closeMenu();
+                    iModel.resetScrollAndHovering();
+
                     if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
                         LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
                         iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
