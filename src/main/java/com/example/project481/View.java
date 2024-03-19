@@ -3,18 +3,19 @@ package com.example.project481;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
-import java.util.Stack;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
 import javafx.scene.text.*;
+
+import static java.lang.Math.sqrt;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
@@ -53,7 +54,6 @@ public class View extends StackPane implements Subscriber {
                 menuModeLabel.setText("Linear menu selected");
                 this.getChildren().add(menuModeLabel);
 
-                // Example: Displaying linear menu items as rectangles
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
 
@@ -146,6 +146,60 @@ public class View extends StackPane implements Subscriber {
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
                 this.getChildren().add(menuModeLabel);
+                itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
+                itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
+
+//                menuBox = new Pane();
+//                setAlignment(menuBox, Pos.TOP_LEFT);
+
+                // numCols and numRows *should* be the same and create a square grid
+                int numCols = (int)Math.ceil(sqrt(menuItems.size()));
+                int numRows = (int)Math.ceil(menuItems.size() / numCols);
+
+                double gridWidth = numCols * itemWidth;
+                double gridHeight = numRows * itemHeight;
+
+                double gridX = (800 - gridWidth) / 2;
+                double gridY = (800 - gridHeight) / 2;
+
+                menuBox = new Pane();
+                for (int i=0; i<numRows; i++) {
+                    HBox row = new HBox();
+                    for (int j=0; j<numCols; j++){
+                        Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
+                        if (hovering == menuItems.get(i*numCols + j)) menuItem.setFill(Color.WHITE);
+                        else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
+                        menuItem.setStroke(Color.BLACK);
+                        Label itemLabel = new Label(menuItems.get(i*numCols + j).getText());
+                        itemLabel.setAlignment(Pos.CENTER);
+                        itemLabel.setPrefWidth(itemWidth);
+                        itemLabel.setPrefHeight(itemHeight);
+
+                        row.getChildren().add(new StackPane(menuItem, itemLabel));
+                    }
+                    row.setTranslateY(gridY + i*itemHeight);
+                    menuBox.getChildren().add(row);
+                }
+
+
+//                for (MenuItem item : menuItems) {
+//                    Pane tempPane = new Pane();
+//                    Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
+//                    if (hovering == item) menuItem.setFill(Color.WHITE);
+//                    else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
+//                    menuItem.setStroke(Color.BLACK);
+//                    Label itemLabel = new Label(item.getText());
+//                    itemLabel.setAlignment(Pos.CENTER);
+//                    itemLabel.setPrefWidth(itemWidth);
+//                    itemLabel.setPrefHeight(itemHeight); // Set explicit preferred size for the item label
+//
+//                    tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
+//                    tempPane.setTranslateX(((LinearMenuItem) item).getX());
+//                    tempPane.setTranslateY(((LinearMenuItem) item).getY());
+//                    menuBox.getChildren().add(tempPane);
+//                }
+
+                this.getChildren().add(menuBox); // Add the VBox to the layout
                 break;
             case SCROLL:
                 menuModeLabel.setText("Scroll menu selected");
