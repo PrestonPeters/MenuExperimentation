@@ -23,10 +23,6 @@ public class Menu {
             for (MenuItem item : menuItems) {
                     if (item.isBaseItem()) {
                         item.setText("Open");
-//                        // centre the GridMenu's open button in the middle of the menu
-//                        if (item instanceof GridMenuItem){
-//                            return new ArrayList<>(Collections.singletonList(new GridMenuItem("Open", true, 400-50, 400-25, ((GridMenuItem) item).getItemWidth(), ((GridMenuItem) item).getItemHeight())));
-//                        }
                         return new ArrayList<>(Collections.singletonList(item));
                     }
             }
