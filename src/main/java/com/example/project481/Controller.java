@@ -109,6 +109,10 @@ public class Controller {
 
                     iModel.setMenuMode(menuMode);
                     model.setMenuItems(menuMode);
+                    if (menuMode == MenuMode.SCROLL) {
+                        LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
+                        iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
+                    }
                 }
                 dragState = DragState.IDLE;
         }

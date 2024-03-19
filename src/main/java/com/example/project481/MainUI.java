@@ -17,6 +17,7 @@ public class MainUI extends BorderPane {
         pubsub.addSubscriber("menuMode", view);
         pubsub.addSubscriber("menuItems", view);
         pubsub.addSubscriber("hovering", view);
+        pubsub.addSubscriber("scrollBar", view);
 
         this.setCenter(view);
     }

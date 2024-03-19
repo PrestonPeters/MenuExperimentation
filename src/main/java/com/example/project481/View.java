@@ -8,9 +8,6 @@ import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
-import java.util.Stack;
-
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
@@ -23,6 +20,7 @@ public class View extends StackPane implements Subscriber {
     MenuItem hovering;
     Controller.MenuMode menuMode;
     ArrayList<MenuItem> menuItems;
+    ScrollBar scrollBar;
     private MenuModeLabel menuModeLabel;
     public View() {
         setFocusTraversable(true);
@@ -50,7 +48,9 @@ public class View extends StackPane implements Subscriber {
     public void draw(){
         switch (menuMode) {
             case LINEAR:
-                menuModeLabel.setText("Linear menu selected");
+            case SCROLL:
+                menuModeLabel.setText((menuMode == Controller.MenuMode.LINEAR) ?
+                        "Linear menu selected" : "Scroll menu selected");
                 this.getChildren().add(menuModeLabel);
 
                 // Example: Displaying linear menu items as rectangles
@@ -78,6 +78,8 @@ public class View extends StackPane implements Subscriber {
                 }
 
                 this.getChildren().add(menuBox); // Add the VBox to the layout
+
+                if (scrollBar != null) this.getChildren().add(scrollBar);
                 break;
 
             case RADIAL:
@@ -147,10 +149,7 @@ public class View extends StackPane implements Subscriber {
                 menuModeLabel.setText("Grid menu selected");
                 this.getChildren().add(menuModeLabel);
                 break;
-            case SCROLL:
-                menuModeLabel.setText("Scroll menu selected");
-                this.getChildren().add(menuModeLabel);
-                break;
+
             default:
                 menuModeLabel.setText("No menu mode selected");
                 this.getChildren().add(menuModeLabel);
@@ -175,6 +174,12 @@ public class View extends StackPane implements Subscriber {
             case "hovering" -> {
                 this.getChildren().clear();
                 this.hovering = (MenuItem) message;
+                draw();
+            }
+
+            case "scrollBar" -> {
+                this.getChildren().clear();
+                this.scrollBar = (ScrollBar) message;
                 draw();
             }
         }

@@ -4,10 +4,12 @@ public class InteractionModel {
     PublishSubscribe pubsub;
     Controller.MenuMode menuMode;
     MenuItem hovering;
-    public InteractionModel(PublishSubscribe pubsub){
+    ScrollBar scrollBar;
+    public InteractionModel(PublishSubscribe pubsub) {
         this.pubsub = pubsub;
         pubsub.createChannel("menuMode");
         pubsub.createChannel("hovering");
+        pubsub.createChannel("scrollBar");
         hovering = null;
     }
 
@@ -25,4 +27,14 @@ public class InteractionModel {
     public MenuItem getHovering() { return this.hovering; }
 
     public Controller.MenuMode getMenuMode() { return menuMode; }
+
+    public void makeScrollBar(double x, double y, double width, double height) {
+        scrollBar = new ScrollBar(x + width * 0.9, y + height * 0.1, width * 0.05, height * 0.8);
+        pubsub.publish("scrollBar", scrollBar);
+    }
+
+    public void deleteScrollBar() {
+        scrollBar = null;
+        pubsub.publish("scrollBar", null);
+    }
 }
