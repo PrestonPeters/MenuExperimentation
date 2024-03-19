@@ -95,16 +95,19 @@ public class Controller {
     public void handleKeyPressed(KeyEvent event) {
         switch (keyState) {
             case NO_CTRL:
-                if (event.getCode() == KeyCode.CONTROL) keyState = KeyState.CTRL_HELD;
+                if (event.getCode() == KeyCode.CONTROL) {
+                    keyState = KeyState.CTRL_HELD;
+                    if (menuMode == MenuMode.SCROLL) {
+                        ScrollBar scrollBar = iModel.getScrollBar();
+                        if (scrollBar == null) iModel.setHovering(model.getItemAtIndex(0));
+                        else iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+                    }
+                }
 
-                else if (menuMode == MenuMode.SCROLL) {
-                    if (event.getCode().isDigitKey() &&
-                            event.getCode() != KeyCode.DIGIT0) {
-                        // STUB - IN HERE, SELECT THE MENU OPTION CORRESPONDING
-                        // TO THE DIGIT THAT WAS INPUT. 1 CORRESPONDS TO INDEX 0
-                        // AND SO ON ALL THE WAY THROUGH UNTIL 9
-                        int keyCodeToIndex = event.getCode().getCode() - 49;
-                        System.out.println(keyCodeToIndex);
+                else if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
+                    if (event.getCode().isDigitKey() && event.getCode() != KeyCode.DIGIT0) {
+                        MenuItem result = model.getItemAtIndex(event.getCode().getCode() - 49);
+                        iModel.setHovering(result);
                     }
                 }
                 dragState = DragState.IDLE;
@@ -136,14 +139,9 @@ public class Controller {
                     model.setMenuItems(menuMode);
                     model.closeMenu();
                     iModel.resetScrollAndHovering();
-
-                    if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
-                        LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
-                        iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
-                        ScrollBar scrollBar = iModel.getScrollBar();
-                        iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
-                    }
+                    if (menuMode == MenuMode.SCROLL) iModel.setHovering(model.getItemAtIndex(0));
                 }
+
                 dragState = DragState.IDLE;
         }
     }
@@ -151,7 +149,26 @@ public class Controller {
     // Responsible for updating the keyState. Currently, the only keyStates are
     // NO_CTRL if the Control key is not held down and CTRL_HELD otherwise.
     public void handleKeyReleased(KeyEvent event) {
-        if (event.getCode() == KeyCode.CONTROL) keyState = KeyState.NO_CTRL;
+        if (event.getCode() == KeyCode.CONTROL) {
+            keyState = KeyState.NO_CTRL;
+            if (menuMode == MenuMode.SCROLL) iModel.setHovering(null);
+        }
+
+        else if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
+            if (event.getCode().isDigitKey() && event.getCode() != KeyCode.DIGIT0) {
+                MenuItem result = model.getItemAtIndex(event.getCode().getCode() - 49);
+                System.out.println(menuMode + " " + result.getText());
+                if (result.isBaseItem()) {
+                    model.closeMenu();
+                    iModel.resetScrollAndHovering();
+                }
+
+                else {
+                    ScrollBar scrollBar = iModel.getScrollBar();
+                    iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+                }
+            }
+        }
     }
 
     public void handleScrollEvent(ScrollEvent event) {

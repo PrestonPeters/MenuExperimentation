@@ -16,6 +16,8 @@ public class Model {
 
     public Menu getMenu() { return menu; }
 
+    public MenuItem getItemAtIndex(int index) { return menu.getMenuItems().get(index); }
+
     public void openMenu() {
         menu.open();
         pubsub.publish("menuItems", menu);

@@ -67,6 +67,7 @@ public class View extends StackPane implements Subscriber {
 
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
+                int iterator = 1;
 
                 for (MenuItem item : menuItems) {
                     Pane tempPane = new Pane();
@@ -80,9 +81,22 @@ public class View extends StackPane implements Subscriber {
                     itemLabel.setPrefHeight(itemHeight); // Set explicit preferred size for the item label
 
                     tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
+
+                    if (menuMode == Controller.MenuMode.SCROLL && menuItems.size() > 1) {
+                        Label hotkeyLabel = new Label("#" + iterator);
+                        hotkeyLabel.setFont(new Font(18));
+                        hotkeyLabel.setAlignment(Pos.CENTER_LEFT);
+                        hotkeyLabel.setPrefWidth(itemWidth);
+                        hotkeyLabel.setPrefHeight(itemHeight);
+                        hotkeyLabel.setTranslateX(5);
+                        tempPane.getChildren().add(hotkeyLabel);
+                    }
+
                     tempPane.setTranslateX(((LinearMenuItem) item).getX());
                     tempPane.setTranslateY(((LinearMenuItem) item).getY());
                     menuBox.getChildren().add(tempPane);
+
+                    iterator++;
                 }
 
                 this.getChildren().add(menuBox); // Add the VBox to the layout
