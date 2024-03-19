@@ -151,7 +151,8 @@ public class View extends StackPane implements Subscriber {
 
                 // numCols and numRows *should* be the same and create a square grid
                 int numCols = (int)Math.ceil(sqrt(menuItems.size()));
-                int numRows = (int)Math.ceil(menuItems.size() / numCols);
+                //int numRows = (int)Math.ceil(menuItems.size() / numCols);
+                int numRows = numCols;
 
                 double gridWidth = numCols * itemWidth;
                 double gridHeight = numRows * itemHeight;
@@ -163,15 +164,18 @@ public class View extends StackPane implements Subscriber {
                 for (int i=0; i<numRows; i++) {
                     HBox row = new HBox();
                     for (int j=0; j<numCols; j++){
-                        Label itemLabel = new Label(menuItems.get(i*numCols + j).getText());
                         Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
+                        Label itemLabel = new Label("");
+                        if (menuItems.size() > i*numCols+j){
+                            itemLabel = new Label(menuItems.get(i*numCols + j).getText());
+                        }
                         if (menuItems.size() < i*numCols + j + 1) {
                             // if there are not enough items to fill the grid, fill the remaining space with empty rectangles
                             menuItem.setFill(new Color(0.55, 0.55, 0.55, 1));
-                            itemLabel = new Label("");
                         } else if (hovering == menuItems.get(i*numCols + j)) {
                             menuItem.setFill(Color.WHITE);
                         } else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
+                        //Label itemLabel = new Label(menuItems.get(i*numCols + j).getText());
                         menuItem.setStroke(Color.BLACK);
                         itemLabel.setAlignment(Pos.CENTER);
                         itemLabel.setPrefWidth(itemWidth);

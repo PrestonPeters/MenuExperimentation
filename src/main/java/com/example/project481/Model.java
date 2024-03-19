@@ -4,7 +4,7 @@ public class Model {
     private Menu menu;
     private final PublishSubscribe pubsub;
     public Model(PublishSubscribe pubsub){
-        menu = new Menu(8);
+        menu = new Menu(10);
         this.pubsub = pubsub;
         pubsub.createChannel("menuItems");
     }
