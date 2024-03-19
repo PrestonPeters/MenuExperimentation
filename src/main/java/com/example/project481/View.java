@@ -29,6 +29,8 @@ public class View extends StackPane implements Subscriber {
         this.menuMode = Controller.MenuMode.NONE;
         canvas = new Canvas(800, 800);
         gc = canvas.getGraphicsContext2D();
+        hovering = null;
+        scrollBar = null;
         this.getChildren().add(canvas);
         draw();
 
@@ -46,7 +48,9 @@ public class View extends StackPane implements Subscriber {
         this.setOnScroll(controller::handleScrollEvent);
     }
 
-    public void draw(){
+    public void draw() {
+        this.getChildren().clear();
+
         switch (menuMode) {
             case LINEAR:
             case SCROLL:
@@ -55,11 +59,14 @@ public class View extends StackPane implements Subscriber {
                 this.getChildren().add(menuModeLabel);
 
                 // Example: Displaying linear menu items as rectangles
-                double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
-                double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
 
                 Pane menuBox = new Pane();
                 setAlignment(menuBox, Pos.TOP_LEFT);
+
+                if (menuItems.isEmpty()) return;
+
+                double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
+                double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
 
                 for (MenuItem item : menuItems) {
                     Pane tempPane = new Pane();
@@ -157,29 +164,25 @@ public class View extends StackPane implements Subscriber {
         }
     }
 
-    public void receiveNotification(String channel, Object message){
+    public void receiveNotification(String channel, Object message) {
         switch (channel) {
             case "menuMode" -> {
                 // when menu mode changes
-                this.getChildren().clear();
                 this.menuMode = (Controller.MenuMode) message;
                 menuModeLabel.updateMenuModeLabel(this.menuMode);
             }
             case "menuItems" -> {
-                this.getChildren().clear();
                 // when menuItem list changes
                 Menu menu = (Menu) message;
                 this.menuItems = menu.getMenuItems();
                 draw();
             }
             case "hovering" -> {
-                this.getChildren().clear();
                 this.hovering = (MenuItem) message;
                 draw();
             }
 
             case "scrollBar" -> {
-                this.getChildren().clear();
                 this.scrollBar = (ScrollBar) message;
                 draw();
             }

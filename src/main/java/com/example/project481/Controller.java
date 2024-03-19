@@ -4,6 +4,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import java.util.ArrayList;
 
 public class Controller {
     InteractionModel iModel;
@@ -55,12 +56,28 @@ public class Controller {
     }
 
     public void handleMouseReleased(MouseEvent e) {
+        MenuItem result;
         if (menuMode == MenuMode.SCROLL) {
-            if (keyState == KeyState.CTRL_HELD) model.toggleMenuOpen();
+            if (keyState == KeyState.CTRL_HELD) {
+                if (!model.getMenu().isOpen()) {
+                    model.toggleMenuOpen();
+                    LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
+                    iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
+                    ScrollBar scrollBar = iModel.getScrollBar();
+                    iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+                }
+
+                else {
+                    ScrollBar scrollBar = iModel.getScrollBar();
+                    result = model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY());
+                    System.out.println(menuMode + " " + result.getText());
+                    if (result.isBaseItem()) model.toggleMenuOpen();
+                }
+            }
             return;
         }
 
-        MenuItem result = model.checkForHit(e.getX(), e.getY());
+        result = model.checkForHit(e.getX(), e.getY());
         if (menuMode == MenuMode.RADIAL && dragState == DragState.DRAGGING)
             dragState = DragState.IDLE;
 
@@ -112,9 +129,9 @@ public class Controller {
                         menuMode = MenuMode.NONE;
                     }
 
-                    iModel.setMenuMode(menuMode);
                     model.setMenuItems(menuMode);
-                    if (menuMode == MenuMode.SCROLL) {
+                    iModel.setMenuMode(menuMode);
+                    if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
                         LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
                         iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
                         ScrollBar scrollBar = iModel.getScrollBar();
@@ -132,9 +149,13 @@ public class Controller {
     }
 
     public void handleScrollEvent(ScrollEvent event) {
-
-
-        ScrollBar scrollBar = iModel.getScrollBar();
-        iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+        if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
+            ScrollBar scrollBar = iModel.getScrollBar();
+            LinearMenuItem firstItem = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
+            int lastIndex = model.getMenu().getMenuItems().size() - 1;
+            LinearMenuItem lastItem = (LinearMenuItem) model.getMenu().getMenuItems().get(lastIndex);
+            iModel.moveScrollBar(event.getDeltaY(), firstItem.getY(), lastItem.getY() + lastItem.getItemHeight());
+            iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+        }
     }
 }

@@ -11,12 +11,13 @@ public class InteractionModel {
         pubsub.createChannel("hovering");
         pubsub.createChannel("scrollBar");
         hovering = null;
+        scrollBar = null;
     }
 
-    public void setMenuMode(Controller.MenuMode mode){
+    public void setMenuMode(Controller.MenuMode mode) {
         this.menuMode = mode;
         pubsub.publish("menuMode", mode);
-        hovering = null;
+        reset();
     }
 
     public void setHovering(MenuItem hovering) {
@@ -28,6 +29,8 @@ public class InteractionModel {
 
     public Controller.MenuMode getMenuMode() { return menuMode; }
 
+    public boolean hasScrollBar() { return scrollBar != null; }
+
     public void makeScrollBar(double x, double y, double width, double height) {
         scrollBar = new ScrollBar(x + width * 0.9, y + height * 0.1, width * 0.05, height * 0.8);
         pubsub.publish("scrollBar", scrollBar);
@@ -35,8 +38,15 @@ public class InteractionModel {
 
     public ScrollBar getScrollBar() { return scrollBar; }
 
-    public void deleteScrollBar() {
+    public void moveScrollBar(double dY, double upperBound, double lowerBound) {
+        scrollBar.moveScrollBar(dY, upperBound, lowerBound);
+        pubsub.publish("scrollBar", scrollBar);
+    }
+
+    public void reset() {
         scrollBar = null;
+        hovering = null;
         pubsub.publish("scrollBar", null);
+        pubsub.publish("hovering", null);
     }
 }
