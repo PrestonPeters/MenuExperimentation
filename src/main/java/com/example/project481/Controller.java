@@ -3,6 +3,7 @@ package com.example.project481;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
 public class Controller {
     InteractionModel iModel;
@@ -30,7 +31,7 @@ public class Controller {
     }
 
     public void handleMouseMoved(MouseEvent e) {
-        iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
+        if (menuMode != MenuMode.SCROLL) iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
     }
 
     public void handleMouseDragged(MouseEvent e) {
@@ -54,6 +55,11 @@ public class Controller {
     }
 
     public void handleMouseReleased(MouseEvent e) {
+        if (menuMode == MenuMode.SCROLL) {
+            if (keyState == KeyState.CTRL_HELD) model.toggleMenuOpen();
+            return;
+        }
+
         MenuItem result = model.checkForHit(e.getX(), e.getY());
         if (menuMode == MenuMode.RADIAL && dragState == DragState.DRAGGING)
             dragState = DragState.IDLE;
@@ -61,8 +67,7 @@ public class Controller {
         else if (result != null) {
             dragState = DragState.IDLE;
             System.out.println(menuMode + " " + result.getText());
-            if (result.isBaseItem() && !model.getMenu().isOpen()) model.getMenu().open();
-            else if (result.isBaseItem() && model.getMenu().isOpen()) model.getMenu().close();
+            model.toggleMenuOpen();
             model.publishMenuItems();
         }
     }
@@ -112,6 +117,8 @@ public class Controller {
                     if (menuMode == MenuMode.SCROLL) {
                         LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
                         iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
+                        ScrollBar scrollBar = iModel.getScrollBar();
+                        iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
                     }
                 }
                 dragState = DragState.IDLE;
@@ -124,7 +131,10 @@ public class Controller {
         if (event.getCode() == KeyCode.CONTROL) keyState = KeyState.NO_CTRL;
     }
 
-    public void handleScrollEvent() {
+    public void handleScrollEvent(ScrollEvent event) {
 
+
+        ScrollBar scrollBar = iModel.getScrollBar();
+        iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
     }
 }

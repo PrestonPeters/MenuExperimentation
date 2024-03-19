@@ -67,4 +67,6 @@ public class Menu {
     public void open() { isOpen = true; }
 
     public void close() { isOpen = false; }
+
+    public void toggleOpen() { isOpen = !isOpen; }
 }

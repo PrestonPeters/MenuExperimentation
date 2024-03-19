@@ -43,6 +43,7 @@ public class View extends StackPane implements Subscriber {
         this.setOnMouseReleased(controller::handleMouseReleased);
         this.setOnMouseMoved(controller::handleMouseMoved);
         this.setOnMouseDragged(controller::handleMouseDragged);
+        this.setOnScroll(controller::handleScrollEvent);
     }
 
     public void draw(){

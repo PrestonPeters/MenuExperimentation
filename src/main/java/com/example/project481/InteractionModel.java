@@ -33,6 +33,8 @@ public class InteractionModel {
         pubsub.publish("scrollBar", scrollBar);
     }
 
+    public ScrollBar getScrollBar() { return scrollBar; }
+
     public void deleteScrollBar() {
         scrollBar = null;
         pubsub.publish("scrollBar", null);

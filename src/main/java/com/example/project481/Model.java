@@ -16,6 +16,21 @@ public class Model {
 
     public Menu getMenu() { return menu; }
 
+    public void openMenu() {
+        menu.open();
+        pubsub.publish("menuItems", menu);
+    }
+
+    public void closeMenu() {
+        menu.close();
+        pubsub.publish("menuItems", menu);
+    }
+
+    public void toggleMenuOpen() {
+        menu.toggleOpen();
+        pubsub.publish("menuItems", menu);
+    }
+
     public MenuItem checkForHit(double x, double y) {
         for (MenuItem item : menu.getMenuItems())
             if (item.contains(x, y)) return item;
