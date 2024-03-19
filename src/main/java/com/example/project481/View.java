@@ -9,7 +9,6 @@ import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
@@ -58,8 +57,8 @@ public class View extends StackPane implements Subscriber {
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
 
-                Pane menuBox = new Pane();
-                setAlignment(menuBox, Pos.TOP_LEFT);
+                Pane linearMenuBox = new Pane();
+                setAlignment(linearMenuBox, Pos.TOP_LEFT);
 
                 for (MenuItem item : menuItems) {
                     Pane tempPane = new Pane();
@@ -75,10 +74,10 @@ public class View extends StackPane implements Subscriber {
                     tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
                     tempPane.setTranslateX(((LinearMenuItem) item).getX());
                     tempPane.setTranslateY(((LinearMenuItem) item).getY());
-                    menuBox.getChildren().add(tempPane);
+                    linearMenuBox.getChildren().add(tempPane);
                 }
 
-                this.getChildren().add(menuBox); // Add the VBox to the layout
+                this.getChildren().add(linearMenuBox); // Add the VBox to the layout
                 break;
 
             case RADIAL:
@@ -89,7 +88,7 @@ public class View extends StackPane implements Subscriber {
                 Pane baseItemPane = new Pane();
                 Pane masterPane = new Pane();
 
-                // Now each wedge is built individually so they can properly respond to hit detection
+                // Now each wedge is built individually, so they can properly respond to hit detection
                 for (MenuItem item : menuItems) {
                     RadialMenuItem radialItem = (RadialMenuItem) item;
 
@@ -159,13 +158,13 @@ public class View extends StackPane implements Subscriber {
                 double gridX = (800 - gridWidth) / 2;
                 double gridY = (800 - gridHeight) / 2;
 
-                menuBox = new Pane();
+                Pane gridMenuBox = new Pane();
                 for (int i=0; i<numRows; i++) {
                     HBox row = new HBox();
                     for (int j=0; j<numCols; j++){
                         Rectangle rect = new Rectangle(itemWidth, itemHeight);
                         Label itemLabel = new Label("");
-                        StackPane stackPane = new StackPane();
+                        StackPane stackPane;
 
                         if (menuItems.size() > i*numCols+j) {
                             GridMenuItem item = (GridMenuItem) menuItems.get(i*numCols+j);
@@ -175,12 +174,11 @@ public class View extends StackPane implements Subscriber {
                             if (hovering == menuItems.get(i*numCols + j)) {
                                 rect.setFill(Color.WHITE);
                             }
-                            stackPane = new StackPane(rect, itemLabel);
                         } else {
                             // if there are not enough items to fill the grid, fill the remaining space with empty rectangles
                             rect.setFill(new Color(0.55, 0.55, 0.55, 1));
-                            stackPane = new StackPane(rect, itemLabel);
                         }
+                        stackPane = new StackPane(rect, itemLabel);
                         rect.setStroke(Color.BLACK);
                         itemLabel.setAlignment(Pos.CENTER);
                         itemLabel.setPrefWidth(itemWidth);
@@ -194,9 +192,9 @@ public class View extends StackPane implements Subscriber {
                         row.setTranslateX(((GridMenuItem) menuItems.get(0)).getX());
                         row.setTranslateY(((GridMenuItem) menuItems.get(0)).getY());
                     }
-                    menuBox.getChildren().add(row);
+                    gridMenuBox.getChildren().add(row);
                 }
-                this.getChildren().add(menuBox);
+                this.getChildren().add(gridMenuBox);
                 break;
             case SCROLL:
                 menuModeLabel.setText("Scroll menu selected");
