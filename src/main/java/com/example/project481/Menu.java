@@ -79,7 +79,6 @@ public class Menu {
                 y = minBoxHeight;
                 for (int i=0; i<numRows; i++) {
                     int x = minBoxWidth;
-//                    int x = 0;
                     y += 50;
                     for (int j=0; j<numCols; j++) {
                         if (i*numCols + j < menuItems.size()) {
