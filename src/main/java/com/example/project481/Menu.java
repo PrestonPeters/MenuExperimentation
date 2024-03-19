@@ -25,6 +25,7 @@ public class Menu {
                         return new ArrayList<>(Collections.singletonList(item));
                     }
             }
+            menuItems.get(0).setText("Open");
             return new ArrayList<>(Collections.singletonList(menuItems.get(0)));
         }
         return menuItems;
@@ -54,12 +55,15 @@ public class Menu {
                 int y = minVBoxHeight; // where each item will be placed within the menu
                 for (int i = 0;  i < menuItems.size(); i++) {
                     menuItems.set(i, new LinearMenuItem("Item " + i, (i == 0), 350, y, 100, 50));
+                    if (i==0){
+                        menuItems.get(i).setText("Close");
+                    }
                     y += 50;
                 }
                 break;
 
             case RADIAL:
-                menuItems.set(0, new RadialMenuItem(true, "Item 0", 0, 150, 50, 400, 400, menuItems.size() - 1));
+                menuItems.set(0, new RadialMenuItem(true, "Close", 0, 150, 50, 400, 400, menuItems.size() - 1));
                 for (int i = 1;  i < menuItems.size(); i++)
                     menuItems.set(i, new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1));
                 break;

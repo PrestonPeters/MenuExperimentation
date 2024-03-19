@@ -24,8 +24,6 @@ public class MenuItem {
     }
 
     public void setText(String text){
-        if (!this.text.equals("Item 0")) {
-            this.text = text;
-        }
+        this.text = text;
     }
 }

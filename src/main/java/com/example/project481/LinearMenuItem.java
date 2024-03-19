@@ -28,4 +28,6 @@ public class LinearMenuItem extends MenuItem {
     public double getItemWidth() { return itemWidth; }
 
     public double getItemHeight() { return itemHeight; }
+
+
 }
