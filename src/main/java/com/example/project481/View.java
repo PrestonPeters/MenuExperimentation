@@ -181,25 +181,21 @@ public class View extends StackPane implements Subscriber {
                             rect.setFill(new Color(0.55, 0.55, 0.55, 1));
                             stackPane = new StackPane(rect, itemLabel);
                         }
-//                        if (menuItems.size() == 1){
-//                            GridMenuItem item = (GridMenuItem) menuItems.get(0);
-////                            rect.setX(item.getX());
-////                            rect.setY(item.getY());
-////                            stackPane = new StackPane(rect, itemLabel);
-//                            stackPane.setTranslateX(item.getX());
-//                            stackPane.setTranslateY(item.getY());
-//                        }
                         rect.setStroke(Color.BLACK);
                         itemLabel.setAlignment(Pos.CENTER);
                         itemLabel.setPrefWidth(itemWidth);
                         itemLabel.setPrefHeight(itemHeight);
                         row.getChildren().add(stackPane);
                     }
-                    row.setTranslateY(gridY + i*itemHeight);
-                    row.setTranslateX(gridX);
+                    if (menuItems.size() != 1) {
+                        row.setTranslateY(gridY + i * itemHeight);
+                        row.setTranslateX(gridX);
+                    } else {
+                        row.setTranslateX(((GridMenuItem) menuItems.get(0)).getX());
+                        row.setTranslateY(((GridMenuItem) menuItems.get(0)).getY());
+                    }
                     menuBox.getChildren().add(row);
                 }
-
                 this.getChildren().add(menuBox);
                 break;
             case SCROLL:
