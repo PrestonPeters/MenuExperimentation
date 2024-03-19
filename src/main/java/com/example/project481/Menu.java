@@ -19,6 +19,7 @@ public class Menu {
     public ArrayList<MenuItem> getMenuItems() {
         if (!isOpen){
             // first try to return the Base Item; use first item only as fallback
+            // (written when I planned a different item to be base but didn't implement; keeping for posterity)
             for (MenuItem item : menuItems) {
                     if (item.isBaseItem()) {
                         item.setText("Open");
@@ -71,25 +72,32 @@ public class Menu {
             case GRID:
                 // numCols and numRows *should* be the same to create a square grid
                 int numCols = (int)Math.ceil(sqrt(menuItems.size()));
-                int numRows = (int)Math.ceil(menuItems.size() / numCols);
+                int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
+
+                System.out.println("Menu cols: " + numCols + " rows: " + numRows);
 
                 int minBoxWidth = 400 - (numCols * 100) / 2; // where the left of the menu will be
                 int minBoxHeight = (400 - (numRows * 50) / 2)-50; // where the top of the menu will be
 
+ //               int x = minBoxWidth;
                 y = minBoxHeight;
+//                menuItems.set(0, new GridMenuItem("Close", true, x , y, 100, 50));
+//                x += 100;
                 for (int i=0; i<numRows; i++) {
                     int x = minBoxWidth;
                     y += 50;
                     for (int j=0; j<numCols; j++) {
-                        if (i*numCols + j < menuItems.size()) {
-                            if (i*numCols + j == menuItems.size()/2) {
-                                // if in the middle of the grid, set the item to be the base item
-                                menuItems.set(i*numCols+j, new GridMenuItem("Close", true, x, y, 100, 50));
-                            } else menuItems.set(i*numCols + j, new GridMenuItem("Item " + (i*numCols + j+1), false, x, y, 100, 50));
+                        if (i*numCols + j + 1 < menuItems.size()) {
+                            //if (i*numCols + j == menuItems.size()/2) {
+//                            if (i*numCols + j == 0){
+//                                menuItems.set(i*numCols+j, new GridMenuItem("Close", true, x, y, 100, 50));
+//                            } else
+                            menuItems.set(i * numCols + j + 1, new GridMenuItem("Item " + (i * numCols + j + 1), false, x, y, 100, 50));
                             x += 100;
                         }
                     }
                 }
+                menuItems.set(0, new GridMenuItem("Close", true, minBoxWidth, minBoxHeight, 100, 50));
                 break;
         }
     }

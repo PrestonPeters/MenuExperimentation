@@ -49,6 +49,7 @@ public class View extends StackPane implements Subscriber {
     }
 
     public void draw(){
+        if (this.menuItems.isEmpty()) return;
         switch (menuMode) {
             case LINEAR:
                 menuModeLabel.setText("Linear menu selected");
@@ -151,8 +152,10 @@ public class View extends StackPane implements Subscriber {
 
                 // numCols and numRows *should* be the same and create a square grid
                 int numCols = (int)Math.ceil(sqrt(menuItems.size()));
-                //int numRows = (int)Math.ceil(menuItems.size() / numCols);
-                int numRows = numCols;
+                int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
+                //int numRows = numCols;
+
+               // System.out.println("View Cols: " + numCols + " Rows: " + numRows);
 
                 double gridWidth = numCols * itemWidth;
                 double gridHeight = numRows * itemHeight;
