@@ -3,6 +3,8 @@ package com.example.project481;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static java.lang.Math.sqrt;
+
 public class Menu {
     private ArrayList<MenuItem> menuItems;
     private boolean isOpen;
@@ -32,6 +34,9 @@ public class Menu {
                         150, 50, 400, 400, menuItems.size()));
                 break;
             case GRID:
+                for (MenuItem item : menuItems) ((GridMenuItem) item).moveUp();
+                double lastX = ((GridMenuItem) menuItems.get(menuItems.size() - 1)).getX();
+                menuItems.add(new GridMenuItem(text, (menuItems.isEmpty()), lastX + 100, 350, 100, 50));
                 break;
             case SCROLL:
         }
@@ -52,6 +57,27 @@ public class Menu {
                 menuItems.set(0, new RadialMenuItem(true, "Item 0", 0, 150, 50, 400, 400, menuItems.size() - 1));
                 for (int i = 1;  i < menuItems.size(); i++)
                     menuItems.set(i, new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1));
+                break;
+
+            case GRID:
+                // numCols and numRows *should* be the same to create a square grid
+                int numCols = (int)Math.ceil(sqrt(menuItems.size()));
+                int numRows = (int)Math.ceil(menuItems.size() / numCols);
+
+                int minBoxWidth = 400 - (numCols * 100) / 2; // where the left of the menu will be
+                int minBoxHeight = (400 - (numRows * 50) / 2)-50; // where the top of the menu will be
+
+                y = minBoxHeight; // where each item will be placed within the menu
+                for (int i=0; i<numRows; i++) {
+                    int x = minBoxWidth;
+                    y += 50;
+                    for (int j=0; j<numCols; j++) {
+                        if (i*numCols + j < menuItems.size()) {
+                            menuItems.set(i*numCols + j, new GridMenuItem("Item " + (i*numCols + j), (i*numCols + j == 0), x, y, 100, 50));
+                            x += 100;
+                        }
+                    }
+                }
                 break;
         }
     }
