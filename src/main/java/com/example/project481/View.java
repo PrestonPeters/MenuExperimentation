@@ -150,12 +150,8 @@ public class View extends StackPane implements Subscriber {
                 itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
                 itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
 
-                // numCols and numRows *should* be the same and create a square grid
                 int numCols = (int)Math.ceil(sqrt(menuItems.size()));
                 int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
-                //int numRows = numCols;
-
-               // System.out.println("View Cols: " + numCols + " Rows: " + numRows);
 
                 double gridWidth = numCols * itemWidth;
                 double gridHeight = numRows * itemHeight;
@@ -167,30 +163,44 @@ public class View extends StackPane implements Subscriber {
                 for (int i=0; i<numRows; i++) {
                     HBox row = new HBox();
                     for (int j=0; j<numCols; j++){
-                        Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
+                        Rectangle rect = new Rectangle(itemWidth, itemHeight);
                         Label itemLabel = new Label("");
-                        if (menuItems.size() > i*numCols+j){
-                            itemLabel = new Label(menuItems.get(i*numCols + j).getText());
-                        }
-                        if (menuItems.size() < i*numCols + j + 1) {
+                        StackPane stackPane = new StackPane();
+
+                        if (menuItems.size() > i*numCols+j) {
+                            GridMenuItem item = (GridMenuItem) menuItems.get(i*numCols+j);
+                            rect = new Rectangle(item.getX(), item.getY(), itemWidth, itemHeight);
+                            rect.setFill(new Color(0.95, 0.95, 0.95, 1));
+                            itemLabel = new Label(menuItems.get(i * numCols + j).getText());
+                            if (hovering == menuItems.get(i*numCols + j)) {
+                                rect.setFill(Color.WHITE);
+                            }
+                            stackPane = new StackPane(rect, itemLabel);
+                        } else {
                             // if there are not enough items to fill the grid, fill the remaining space with empty rectangles
-                            menuItem.setFill(new Color(0.55, 0.55, 0.55, 1));
-                        } else if (hovering == menuItems.get(i*numCols + j)) {
-                            menuItem.setFill(Color.WHITE);
-                        } else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
-                        //Label itemLabel = new Label(menuItems.get(i*numCols + j).getText());
-                        menuItem.setStroke(Color.BLACK);
+                            rect.setFill(new Color(0.55, 0.55, 0.55, 1));
+                            stackPane = new StackPane(rect, itemLabel);
+                        }
+//                        if (menuItems.size() == 1){
+//                            GridMenuItem item = (GridMenuItem) menuItems.get(0);
+////                            rect.setX(item.getX());
+////                            rect.setY(item.getY());
+////                            stackPane = new StackPane(rect, itemLabel);
+//                            stackPane.setTranslateX(item.getX());
+//                            stackPane.setTranslateY(item.getY());
+//                        }
+                        rect.setStroke(Color.BLACK);
                         itemLabel.setAlignment(Pos.CENTER);
                         itemLabel.setPrefWidth(itemWidth);
                         itemLabel.setPrefHeight(itemHeight);
-                        row.getChildren().add(new StackPane(menuItem, itemLabel));
+                        row.getChildren().add(stackPane);
                     }
                     row.setTranslateY(gridY + i*itemHeight);
                     row.setTranslateX(gridX);
                     menuBox.getChildren().add(row);
                 }
 
-                this.getChildren().add(menuBox); // Add the VBox to the layout
+                this.getChildren().add(menuBox);
                 break;
             case SCROLL:
                 menuModeLabel.setText("Scroll menu selected");
