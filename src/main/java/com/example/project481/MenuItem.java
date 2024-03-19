@@ -22,4 +22,10 @@ public class MenuItem {
         // STUB
         return false;
     }
+
+    public void setText(String text){
+        if (!this.text.equals("Item 0")) {
+            this.text = text;
+        }
+    }
 }

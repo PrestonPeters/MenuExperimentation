@@ -182,26 +182,9 @@ public class View extends StackPane implements Subscriber {
                         row.getChildren().add(new StackPane(menuItem, itemLabel));
                     }
                     row.setTranslateY(gridY + i*itemHeight);
+                    row.setTranslateX(gridX);
                     menuBox.getChildren().add(row);
                 }
-
-
-//                for (MenuItem item : menuItems) {
-//                    Pane tempPane = new Pane();
-//                    Rectangle menuItem = new Rectangle(itemWidth, itemHeight);
-//                    if (hovering == item) menuItem.setFill(Color.WHITE);
-//                    else menuItem.setFill(new Color(0.95, 0.95, 0.95, 1));
-//                    menuItem.setStroke(Color.BLACK);
-//                    Label itemLabel = new Label(item.getText());
-//                    itemLabel.setAlignment(Pos.CENTER);
-//                    itemLabel.setPrefWidth(itemWidth);
-//                    itemLabel.setPrefHeight(itemHeight); // Set explicit preferred size for the item label
-//
-//                    tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
-//                    tempPane.setTranslateX(((LinearMenuItem) item).getX());
-//                    tempPane.setTranslateY(((LinearMenuItem) item).getY());
-//                    menuBox.getChildren().add(tempPane);
-//                }
 
                 this.getChildren().add(menuBox); // Add the VBox to the layout
                 break;

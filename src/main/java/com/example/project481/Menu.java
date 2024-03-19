@@ -17,7 +17,16 @@ public class Menu {
     }
 
     public ArrayList<MenuItem> getMenuItems() {
-        if (!isOpen) return new ArrayList<>(Collections.singletonList(menuItems.get(0)));
+        if (!isOpen){
+            // first try to return the Base Item; use first item only as fallback
+            for (MenuItem item : menuItems) {
+                    if (item.isBaseItem()) {
+                        item.setText("Open");
+                        return new ArrayList<>(Collections.singletonList(item));
+                    }
+            }
+            return new ArrayList<>(Collections.singletonList(menuItems.get(0)));
+        }
         return menuItems;
     }
 
@@ -34,9 +43,9 @@ public class Menu {
                         150, 50, 400, 400, menuItems.size()));
                 break;
             case GRID:
-                for (MenuItem item : menuItems) ((GridMenuItem) item).moveUp();
-                double lastX = ((GridMenuItem) menuItems.get(menuItems.size() - 1)).getX();
-                menuItems.add(new GridMenuItem(text, (menuItems.isEmpty()), lastX + 100, 350, 100, 50));
+//                for (MenuItem item : menuItems) ((GridMenuItem) item).moveUp();
+//                double lastX = ((GridMenuItem) menuItems.get(menuItems.size() - 1)).getX();
+//                menuItems.add(new GridMenuItem(text, (menuItems.isEmpty()), lastX + 100, 350, 100, 50));
                 break;
             case SCROLL:
         }
@@ -68,12 +77,16 @@ public class Menu {
                 int minBoxHeight = (400 - (numRows * 50) / 2)-50; // where the top of the menu will be
 
                 y = minBoxHeight; // where each item will be placed within the menu
+               //menuItems.set(0, new GridMenuItem("Item 0", true, 350, y, 100, 50));
                 for (int i=0; i<numRows; i++) {
                     int x = minBoxWidth;
                     y += 50;
                     for (int j=0; j<numCols; j++) {
                         if (i*numCols + j < menuItems.size()) {
-                            menuItems.set(i*numCols + j, new GridMenuItem("Item " + (i*numCols + j), (i*numCols + j == 0), x, y, 100, 50));
+                            if (i*numCols + j == menuItems.size()/2) {
+                                // if in the middle of the grid, set the item to be the base item
+                                menuItems.set(i*numCols+j, new GridMenuItem("Close", true, x, y, 100, 50));
+                            } else menuItems.set(i*numCols + j, new GridMenuItem("Item " + (i*numCols + j+1), false, x, y, 100, 50));
                             x += 100;
                         }
                     }
@@ -89,7 +102,21 @@ public class Menu {
 
     public boolean isOpen() { return isOpen; }
 
-    public void open() { isOpen = true; }
+    public void open() {
+        isOpen = true;
+        for (MenuItem item : menuItems) {
+            if (item.isBaseItem()) {
+                item.setText("Close");
+            }
+        }
+    }
 
-    public void close() { isOpen = false; }
+    public void close() {
+        isOpen = false;
+        for (MenuItem item : menuItems) {
+            if (item.isBaseItem()) {
+                item.setText("Open");
+            }
+        }
+    }
 }
