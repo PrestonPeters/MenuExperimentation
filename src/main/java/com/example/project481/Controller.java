@@ -71,10 +71,8 @@ public class Controller {
                     ScrollBar scrollBar = iModel.getScrollBar();
                     result = model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY());
                     System.out.println(menuMode + " " + result.getText());
-                    if (result.isBaseItem()) {
-                        model.toggleMenuOpen();
-                        iModel.resetScrollAndHovering();
-                    }
+                    model.toggleMenuOpen();
+                    iModel.resetScrollAndHovering();
                 }
             }
             return;
@@ -158,15 +156,13 @@ public class Controller {
             if (event.getCode().isDigitKey() && event.getCode() != KeyCode.DIGIT0) {
                 MenuItem result = model.getItemAtIndex(event.getCode().getCode() - 49);
                 System.out.println(menuMode + " " + result.getText());
-                if (result.isBaseItem()) {
-                    model.closeMenu();
-                    iModel.resetScrollAndHovering();
-                }
+                model.toggleMenuOpen();
+                iModel.resetScrollAndHovering();
+            }
 
-                else {
-                    ScrollBar scrollBar = iModel.getScrollBar();
-                    iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
-                }
+            else {
+                ScrollBar scrollBar = iModel.getScrollBar();
+                iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
             }
         }
     }

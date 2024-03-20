@@ -22,4 +22,8 @@ public class MenuItem {
         // STUB
         return false;
     }
+
+    public void setText(String text){
+        this.text = text;
+    }
 }

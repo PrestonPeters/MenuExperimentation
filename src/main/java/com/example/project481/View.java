@@ -3,6 +3,7 @@ package com.example.project481;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
@@ -12,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
 import javafx.scene.text.*;
+
+import static java.lang.Math.sqrt;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
@@ -48,9 +51,8 @@ public class View extends StackPane implements Subscriber {
         this.setOnScroll(controller::handleScrollEvent);
     }
 
-    public void draw() {
-        this.getChildren().clear();
-
+    public void draw(){
+        if (this.menuItems.isEmpty()) return;
         switch (menuMode) {
             case LINEAR:
             case SCROLL:
@@ -58,15 +60,11 @@ public class View extends StackPane implements Subscriber {
                         "Linear menu selected" : "Scroll menu selected");
                 this.getChildren().add(menuModeLabel);
 
-                // Example: Displaying linear menu items as rectangles
-
-                Pane menuBox = new Pane();
-                setAlignment(menuBox, Pos.TOP_LEFT);
-
-                if (menuItems.isEmpty()) return;
-
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
+
+                Pane linearMenuBox = new Pane();
+                setAlignment(linearMenuBox, Pos.TOP_LEFT);
                 int iterator = 1;
 
                 for (MenuItem item : menuItems) {
@@ -94,12 +92,12 @@ public class View extends StackPane implements Subscriber {
 
                     tempPane.setTranslateX(((LinearMenuItem) item).getX());
                     tempPane.setTranslateY(((LinearMenuItem) item).getY());
-                    menuBox.getChildren().add(tempPane);
+                    linearMenuBox.getChildren().add(tempPane);
 
                     iterator++;
                 }
 
-                this.getChildren().add(menuBox); // Add the VBox to the layout
+                this.getChildren().add(linearMenuBox);
 
                 if (scrollBar != null) this.getChildren().add(scrollBar);
                 break;
@@ -170,6 +168,55 @@ public class View extends StackPane implements Subscriber {
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
                 this.getChildren().add(menuModeLabel);
+                itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
+                itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
+
+                int numCols = (int)Math.ceil(sqrt(menuItems.size()));
+                int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
+
+                double gridWidth = numCols * itemWidth;
+                double gridHeight = numRows * itemHeight;
+
+                double gridX = (800 - gridWidth) / 2;
+                double gridY = (800 - gridHeight) / 2;
+
+                Pane gridMenuBox = new Pane();
+                for (int i=0; i<numRows; i++) {
+                    HBox row = new HBox();
+                    for (int j=0; j<numCols; j++){
+                        Rectangle rect = new Rectangle(itemWidth, itemHeight);
+                        Label itemLabel = new Label("");
+                        StackPane stackPane;
+
+                        if (menuItems.size() > i*numCols+j) {
+                            GridMenuItem item = (GridMenuItem) menuItems.get(i*numCols+j);
+                            rect = new Rectangle(item.getX(), item.getY(), itemWidth, itemHeight);
+                            rect.setFill(new Color(0.95, 0.95, 0.95, 1));
+                            itemLabel = new Label(menuItems.get(i * numCols + j).getText());
+                            if (hovering == menuItems.get(i*numCols + j)) {
+                                rect.setFill(Color.WHITE);
+                            }
+                        } else {
+                            // if there are not enough items to fill the grid, fill the remaining space with empty rectangles
+                            rect.setFill(new Color(0.55, 0.55, 0.55, 1));
+                        }
+                        stackPane = new StackPane(rect, itemLabel);
+                        rect.setStroke(Color.BLACK);
+                        itemLabel.setAlignment(Pos.CENTER);
+                        itemLabel.setPrefWidth(itemWidth);
+                        itemLabel.setPrefHeight(itemHeight);
+                        row.getChildren().add(stackPane);
+                    }
+                    if (menuItems.size() != 1) {
+                        row.setTranslateY(gridY + i * itemHeight);
+                        row.setTranslateX(gridX);
+                    } else {
+                        row.setTranslateX(((GridMenuItem) menuItems.get(0)).getX());
+                        row.setTranslateY(((GridMenuItem) menuItems.get(0)).getY());
+                    }
+                    gridMenuBox.getChildren().add(row);
+                }
+                this.getChildren().add(gridMenuBox);
                 break;
 
             default:
@@ -182,21 +229,25 @@ public class View extends StackPane implements Subscriber {
         switch (channel) {
             case "menuMode" -> {
                 // when menu mode changes
+                this.getChildren().clear();
                 this.menuMode = (Controller.MenuMode) message;
                 menuModeLabel.updateMenuModeLabel(this.menuMode);
             }
             case "menuItems" -> {
+                this.getChildren().clear();
                 // when menuItem list changes
                 Menu menu = (Menu) message;
                 this.menuItems = menu.getMenuItems();
                 draw();
             }
             case "hovering" -> {
+                this.getChildren().clear();
                 this.hovering = (MenuItem) message;
                 draw();
             }
 
             case "scrollBar" -> {
+                this.getChildren().clear();
                 this.scrollBar = (ScrollBar) message;
                 draw();
             }

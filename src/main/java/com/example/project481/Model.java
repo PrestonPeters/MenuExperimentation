@@ -29,7 +29,8 @@ public class Model {
     }
 
     public void toggleMenuOpen() {
-        menu.toggleOpen();
+        if (menu.isOpen()) menu.close();
+        else menu.open();
         pubsub.publish("menuItems", menu);
     }
 

@@ -3,6 +3,8 @@ package com.example.project481;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static java.lang.Math.sqrt;
+
 public class Menu {
     private ArrayList<MenuItem> menuItems;
     private boolean isOpen;
@@ -15,7 +17,18 @@ public class Menu {
     }
 
     public ArrayList<MenuItem> getMenuItems() {
-        if (!isOpen) return new ArrayList<>(Collections.singletonList(menuItems.get(0)));
+        if (!isOpen){
+            // first try to return the Base Item; use first item only as fallback
+            // (written when I planned a different item to be base but didn't implement; keeping for posterity)
+            for (MenuItem item : menuItems) {
+                    if (item.isBaseItem()) {
+                        item.setText("Open");
+                        return new ArrayList<>(Collections.singletonList(item));
+                    }
+            }
+            menuItems.get(0).setText("Open");
+            return new ArrayList<>(Collections.singletonList(menuItems.get(0)));
+        }
         return menuItems;
     }
 
@@ -45,14 +58,39 @@ public class Menu {
                 int y = minVBoxHeight; // where each item will be placed within the menu
                 for (int i = 0;  i < menuItems.size(); i++) {
                     menuItems.set(i, new LinearMenuItem("Item " + i, (i == 0), 350, y, 100, 50));
+                    if (i==0){
+                        menuItems.get(i).setText("Close");
+                    }
                     y += 50;
                 }
                 break;
 
             case RADIAL:
-                menuItems.set(0, new RadialMenuItem(true, "Item 0", 0, 150, 50, 400, 400, menuItems.size() - 1));
+                menuItems.set(0, new RadialMenuItem(true, "Close", 0, 150, 50, 400, 400, menuItems.size() - 1));
                 for (int i = 1;  i < menuItems.size(); i++)
                     menuItems.set(i, new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1));
+                break;
+
+            case GRID:
+                int numCols = (int)Math.ceil(sqrt(menuItems.size()));
+                int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
+
+                int minBoxWidth = 400 - (numCols * 100) / 2; // where the left of the menu will be
+                int minBoxHeight = (400 - (numRows * 50) / 2)-50; // where the top of the menu will be
+
+                y = minBoxHeight;
+                for (int i=0; i<numRows; i++) {
+                    int x = minBoxWidth;
+                    y += 50;
+                    for (int j=0; j<numCols; j++) {
+                        if (i*numCols + j < menuItems.size()) {
+                            menuItems.set(i * numCols + j, new GridMenuItem("Item " + (i * numCols + j), false, x, y, 100, 50));
+                            x += 100;
+                        }
+                    }
+                }
+
+                menuItems.set(0, new GridMenuItem("Close", true, minBoxWidth, minBoxHeight + 50, 100, 50));
                 break;
         }
     }
@@ -64,9 +102,21 @@ public class Menu {
 
     public boolean isOpen() { return isOpen; }
 
-    public void open() { isOpen = true; }
+    public void open() {
+        isOpen = true;
+        for (MenuItem item : menuItems) {
+            if (item.isBaseItem()) {
+                item.setText("Close");
+            }
+        }
+    }
 
-    public void close() { isOpen = false; }
-
-    public void toggleOpen() { isOpen = !isOpen; }
+    public void close() {
+        isOpen = false;
+        for (MenuItem item : menuItems) {
+            if (item.isBaseItem()) {
+                item.setText("Open");
+            }
+        }
+    }
 }
