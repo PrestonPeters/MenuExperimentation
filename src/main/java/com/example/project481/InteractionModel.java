@@ -37,8 +37,8 @@ public class InteractionModel {
 
     public ScrollBar getScrollBar() { return scrollBar; }
 
-    public void moveScrollBar(double dY, double upperBound, double lowerBound) {
-        scrollBar.moveScrollBar(dY, upperBound, lowerBound);
+    public void moveScrollBar(double dY, double upperBound, double lowerBound, double itemHeight) {
+        scrollBar.moveScrollBar(dY, upperBound, lowerBound, itemHeight);
         pubsub.publish("scrollBar", scrollBar);
     }
 

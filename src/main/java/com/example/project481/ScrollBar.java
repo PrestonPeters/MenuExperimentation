@@ -30,9 +30,11 @@ public class ScrollBar extends Pane {
     public double getMiddleX() { return x + width / 2; }
     public double getMiddleY() { return y + height / 2; }
 
-    public void moveScrollBar(double dY, double upperBound, double lowerBound) {
-        if (dY > 0) setY(Math.min(lowerBound - height, y + dY));
-        else setY(Math.max(upperBound, y + dY));
+    public void moveScrollBar(double dY, double upperBound, double lowerBound, double itemHeight) {
+        if (dY < -25) dY = -itemHeight;
+        else if (dY > 25) dY = itemHeight;
+        if (dY < 0) setY(Math.min(lowerBound - height, y - dY));
+        else setY(Math.max(upperBound, y - dY));
     }
 
     public void setY(double y) {

@@ -173,7 +173,8 @@ public class Controller {
             LinearMenuItem firstItem = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
             int lastIndex = model.getMenu().getMenuItems().size() - 1;
             LinearMenuItem lastItem = (LinearMenuItem) model.getMenu().getMenuItems().get(lastIndex);
-            iModel.moveScrollBar(event.getDeltaY(), firstItem.getY(), lastItem.getY() + lastItem.getItemHeight());
+            iModel.moveScrollBar(event.getDeltaY(), firstItem.getY(),
+                    lastItem.getY() + lastItem.getItemHeight(), firstItem.getItemHeight());
             iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
         }
     }
