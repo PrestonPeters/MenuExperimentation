@@ -3,18 +3,18 @@ package com.example.project481;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
-import java.util.Stack;
-
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.control.Label;
 import javafx.scene.text.*;
+
+import static java.lang.Math.sqrt;
 
 public class View extends StackPane implements Subscriber {
     Canvas canvas;
@@ -48,17 +48,17 @@ public class View extends StackPane implements Subscriber {
     }
 
     public void draw(){
+        if (this.menuItems.isEmpty()) return;
         switch (menuMode) {
             case LINEAR:
                 menuModeLabel.setText("Linear menu selected");
                 this.getChildren().add(menuModeLabel);
 
-                // Example: Displaying linear menu items as rectangles
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
 
-                Pane menuBox = new Pane();
-                setAlignment(menuBox, Pos.TOP_LEFT);
+                Pane linearMenuBox = new Pane();
+                setAlignment(linearMenuBox, Pos.TOP_LEFT);
 
                 for (MenuItem item : menuItems) {
                     Pane tempPane = new Pane();
@@ -74,10 +74,10 @@ public class View extends StackPane implements Subscriber {
                     tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
                     tempPane.setTranslateX(((LinearMenuItem) item).getX());
                     tempPane.setTranslateY(((LinearMenuItem) item).getY());
-                    menuBox.getChildren().add(tempPane);
+                    linearMenuBox.getChildren().add(tempPane);
                 }
 
-                this.getChildren().add(menuBox); // Add the VBox to the layout
+                this.getChildren().add(linearMenuBox); // Add the VBox to the layout
                 break;
 
             case RADIAL:
@@ -146,6 +146,55 @@ public class View extends StackPane implements Subscriber {
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
                 this.getChildren().add(menuModeLabel);
+                itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
+                itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
+
+                int numCols = (int)Math.ceil(sqrt(menuItems.size()));
+                int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
+
+                double gridWidth = numCols * itemWidth;
+                double gridHeight = numRows * itemHeight;
+
+                double gridX = (800 - gridWidth) / 2;
+                double gridY = (800 - gridHeight) / 2;
+
+                Pane gridMenuBox = new Pane();
+                for (int i=0; i<numRows; i++) {
+                    HBox row = new HBox();
+                    for (int j=0; j<numCols; j++){
+                        Rectangle rect = new Rectangle(itemWidth, itemHeight);
+                        Label itemLabel = new Label("");
+                        StackPane stackPane;
+
+                        if (menuItems.size() > i*numCols+j) {
+                            GridMenuItem item = (GridMenuItem) menuItems.get(i*numCols+j);
+                            rect = new Rectangle(item.getX(), item.getY(), itemWidth, itemHeight);
+                            rect.setFill(new Color(0.95, 0.95, 0.95, 1));
+                            itemLabel = new Label(menuItems.get(i * numCols + j).getText());
+                            if (hovering == menuItems.get(i*numCols + j)) {
+                                rect.setFill(Color.WHITE);
+                            }
+                        } else {
+                            // if there are not enough items to fill the grid, fill the remaining space with empty rectangles
+                            rect.setFill(new Color(0.55, 0.55, 0.55, 1));
+                        }
+                        stackPane = new StackPane(rect, itemLabel);
+                        rect.setStroke(Color.BLACK);
+                        itemLabel.setAlignment(Pos.CENTER);
+                        itemLabel.setPrefWidth(itemWidth);
+                        itemLabel.setPrefHeight(itemHeight);
+                        row.getChildren().add(stackPane);
+                    }
+                    if (menuItems.size() != 1) {
+                        row.setTranslateY(gridY + i * itemHeight);
+                        row.setTranslateX(gridX);
+                    } else {
+                        row.setTranslateX(((GridMenuItem) menuItems.get(0)).getX());
+                        row.setTranslateY(((GridMenuItem) menuItems.get(0)).getY());
+                    }
+                    gridMenuBox.getChildren().add(row);
+                }
+                this.getChildren().add(gridMenuBox);
                 break;
             case SCROLL:
                 menuModeLabel.setText("Scroll menu selected");
