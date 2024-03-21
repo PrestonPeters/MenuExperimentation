@@ -139,8 +139,10 @@ public class Menu {
     }
 
     public void moveRadialMenuItems(double originX, double originY) {
-        for (MenuItem item : menuItems)
+        for (MenuItem item : menuItems) {
+            if (item.hasSubMenu()) item.getSubMenu().moveRadialMenuItems(originX, originY);
             ((RadialMenuItem) item).setOriginXAndY(originX, originY);
+        }
     }
 
     public boolean isOpen() { return isOpen; }
