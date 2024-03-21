@@ -71,6 +71,14 @@ public class Controller {
                     ScrollBar scrollBar = iModel.getScrollBar();
                     result = model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY());
                     System.out.println(menuMode + " " + result.getText());
+                    
+                    // if hit on matching prompt
+                    if (result.getText().equals(iModel.getPrompt().getCurrentPrompt())) {
+                        System.out.println("Hit Prompt");
+
+                        iModel.setNextPrompt();
+                    }
+                    
                     model.toggleMenuOpen();
                     iModel.resetScrollAndHovering();
                 }

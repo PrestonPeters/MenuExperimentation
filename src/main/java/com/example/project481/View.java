@@ -26,8 +26,8 @@ public class View extends StackPane implements Subscriber {
     ScrollBar scrollBar;
     private MenuModeLabel menuModeLabel;
     
-    private Label promptLabel;
-    public String prompt;
+    Prompt prompt;
+    public Label promptLabel;
     
     public View() {
         setFocusTraversable(true);
@@ -38,18 +38,13 @@ public class View extends StackPane implements Subscriber {
         gc = canvas.getGraphicsContext2D();
         hovering = null;
         scrollBar = null;
+        prompt = null;
 
-        prompt = "Placeholder";
-        promptLabel = new Label("Prompt Here: " + prompt);
-        promptLabel.setStyle("-fx-font-size: 24px;");
-        this.getChildren().addAll(canvas, promptLabel);
+        this.getChildren().add(canvas);
         draw();
 
         StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
         StackPane.setMargin(menuModeLabel, new Insets(10));
-
-        StackPane.setAlignment(promptLabel, Pos.TOP_CENTER);
-        StackPane.setMargin(promptLabel, new Insets(50));
     }
 
     public void setUpEvents(Controller controller) {
@@ -63,13 +58,23 @@ public class View extends StackPane implements Subscriber {
     }
 
     public void draw(){
+        if (prompt != null) {
+    
+            promptLabel = new Label("Prompt Here: " + prompt.getCurrentPrompt());
+            promptLabel.setStyle("-fx-font-size: 24px;");
+            this.getChildren().addAll(promptLabel);
+
+            StackPane.setAlignment(promptLabel, Pos.TOP_CENTER);
+            StackPane.setMargin(promptLabel, new Insets(50));
+        }
+
         if (this.menuItems.isEmpty()) return;
         switch (menuMode) {
             case LINEAR:
             case SCROLL:
                 menuModeLabel.setText((menuMode == Controller.MenuMode.LINEAR) ?
                         "Linear menu selected" : "Scroll menu selected");
-                this.getChildren().addAll(menuModeLabel, promptLabel);
+                this.getChildren().addAll(menuModeLabel);
 
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
@@ -115,7 +120,7 @@ public class View extends StackPane implements Subscriber {
 
             case RADIAL:
                 menuModeLabel.setText("Radial menu selected.");
-                this.getChildren().addAll(menuModeLabel, promptLabel);
+                this.getChildren().addAll(menuModeLabel);
 
                 // The baseItem that is to be added in the center circle is initialized here.
                 Pane baseItemPane = new Pane();
@@ -178,7 +183,7 @@ public class View extends StackPane implements Subscriber {
 
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
-                this.getChildren().addAll(menuModeLabel, promptLabel);
+                this.getChildren().addAll(menuModeLabel);
                 itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
                 itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
 
@@ -232,7 +237,7 @@ public class View extends StackPane implements Subscriber {
 
             default:
                 menuModeLabel.setText("No menu mode selected");
-                this.getChildren().addAll(menuModeLabel, promptLabel);
+                this.getChildren().addAll(menuModeLabel);
         }
     }
 
@@ -260,6 +265,12 @@ public class View extends StackPane implements Subscriber {
             case "scrollBar" -> {
                 this.getChildren().clear();
                 this.scrollBar = (ScrollBar) message;
+                draw();
+            }
+
+            case "prompt" -> {
+                this.getChildren().clear();
+                this.prompt = (Prompt) message;
                 draw();
             }
         }
