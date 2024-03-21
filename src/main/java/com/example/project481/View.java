@@ -129,8 +129,8 @@ public class View extends StackPane implements Subscriber {
                         baseItemLabel.setTranslateY(baseItemLabel.getLayoutBounds().getHeight() / 5);
 
                         baseItemPane.getChildren().addAll(baseItem, baseItemLabel);
-                        baseItemPane.setTranslateX(radialItem.getOriginX());
-                        baseItemPane.setTranslateY(radialItem.getOriginY());
+                        baseItemPane.setTranslateX(radialItem.getX());
+                        baseItemPane.setTranslateY(radialItem.getY());
                     }
 
                     // If the item is not a base item, draws its wedge and adds it to the hierarchy.
@@ -152,8 +152,8 @@ public class View extends StackPane implements Subscriber {
 
                         Pane temp = new Pane();
                         temp.getChildren().addAll(wedge, wedgeText);
-                        temp.setTranslateX(radialItem.getOriginX());
-                        temp.setTranslateY(radialItem.getOriginY());
+                        temp.setTranslateX(radialItem.getX());
+                        temp.setTranslateY(radialItem.getY());
                         wedgeText.setTranslateX(textX);
                         wedgeText.setTranslateY(textY);
 

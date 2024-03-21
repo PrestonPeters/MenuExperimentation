@@ -50,8 +50,8 @@ public class Controller {
 
         if (menuMode == MenuMode.RADIAL && result != null && result.isBaseItem()) {
             dragState = DragState.ON_BASE_ITEM;
-            xOffset = ((RadialMenuItem) model.getMenu().getMenuItems().get(0)).getOriginX() - e.getX();
-            yOffset = ((RadialMenuItem) model.getMenu().getMenuItems().get(0)).getOriginY() - e.getY();
+            xOffset = model.getMenu().getMenuItems().get(0).getX() - e.getX();
+            yOffset = model.getMenu().getMenuItems().get(0).getY() - e.getY();
         }
     }
 

@@ -4,6 +4,7 @@ public class MenuItem {
     private boolean isBaseItem;
     private String text;
     private Menu subMenu;
+    protected double x, y;
 
     public MenuItem(String text, boolean isBaseItem) {
         this.isBaseItem = isBaseItem;
@@ -12,6 +13,10 @@ public class MenuItem {
     }
 
     public String getText() { return text; }
+
+    public double getX() { return x; }
+
+    public double getY() { return y; }
 
     public boolean hasSubMenu() { return subMenu != null; }
 
