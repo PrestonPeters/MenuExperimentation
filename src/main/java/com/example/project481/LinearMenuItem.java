@@ -19,10 +19,6 @@ public class LinearMenuItem extends MenuItem {
     // Increments the y value up by 25 to accommodate for the adding of new items
     public void moveUp() { y -= 25; }
 
-    public double getX() { return x; }
-
-    public double getY() { return y; }
-
     public double getItemWidth() { return itemWidth; }
 
     public double getItemHeight() { return itemHeight; }
