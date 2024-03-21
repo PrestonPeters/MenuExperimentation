@@ -90,8 +90,8 @@ public class View extends StackPane implements Subscriber {
                         tempPane.getChildren().add(hotkeyLabel);
                     }
 
-                    tempPane.setTranslateX(((LinearMenuItem) item).getX());
-                    tempPane.setTranslateY(((LinearMenuItem) item).getY());
+                    tempPane.setTranslateX(item.getX());
+                    tempPane.setTranslateY(item.getY());
                     linearMenuBox.getChildren().add(tempPane);
 
                     iterator++;
@@ -129,8 +129,8 @@ public class View extends StackPane implements Subscriber {
                         baseItemLabel.setTranslateY(baseItemLabel.getLayoutBounds().getHeight() / 5);
 
                         baseItemPane.getChildren().addAll(baseItem, baseItemLabel);
-                        baseItemPane.setTranslateX(radialItem.getOriginX());
-                        baseItemPane.setTranslateY(radialItem.getOriginY());
+                        baseItemPane.setTranslateX(radialItem.getX());
+                        baseItemPane.setTranslateY(radialItem.getY());
                     }
 
                     // If the item is not a base item, draws its wedge and adds it to the hierarchy.
@@ -152,8 +152,8 @@ public class View extends StackPane implements Subscriber {
 
                         Pane temp = new Pane();
                         temp.getChildren().addAll(wedge, wedgeText);
-                        temp.setTranslateX(radialItem.getOriginX());
-                        temp.setTranslateY(radialItem.getOriginY());
+                        temp.setTranslateX(radialItem.getX());
+                        temp.setTranslateY(radialItem.getY());
                         wedgeText.setTranslateX(textX);
                         wedgeText.setTranslateY(textY);
 
@@ -211,8 +211,8 @@ public class View extends StackPane implements Subscriber {
                         row.setTranslateY(gridY + i * itemHeight);
                         row.setTranslateX(gridX);
                     } else {
-                        row.setTranslateX(((GridMenuItem) menuItems.get(0)).getX());
-                        row.setTranslateY(((GridMenuItem) menuItems.get(0)).getY());
+                        row.setTranslateX(menuItems.get(0).getX());
+                        row.setTranslateY(menuItems.get(0).getY());
                     }
                     gridMenuBox.getChildren().add(row);
                 }

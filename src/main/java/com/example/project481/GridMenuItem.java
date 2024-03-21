@@ -1,8 +1,6 @@
 package com.example.project481;
 
 public class GridMenuItem extends MenuItem {
-    private double x;
-    private double y;
     private double itemWidth;
     private double itemHeight;
 
@@ -18,11 +16,7 @@ public class GridMenuItem extends MenuItem {
         return x >= this.x && x <= this.x + itemWidth && y >= this.y && y <= this.y + itemHeight;
     }
 
-    public void moveUp() { y -= 25; }
-
-    public double getX() { return x; }
-
-    public double getY() { return y; }
+    public void moveUp() { this.y -= 25; }
 
     public double getItemWidth() { return itemWidth; }
 
