@@ -3,7 +3,7 @@ package com.example.project481;
 public class Model {
     private Menu menu;
     private final PublishSubscribe pubsub;
-    public Model(PublishSubscribe pubsub){
+    public Model(PublishSubscribe pubsub) {
         menu = new Menu(8);
         this.pubsub = pubsub;
         pubsub.createChannel("menuItems");
@@ -15,6 +15,11 @@ public class Model {
     }
 
     public Menu getMenu() { return menu; }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+        openMenu();
+    }
 
     public MenuItem getItemAtIndex(int index) { return menu.getMenuItems().get(index); }
 

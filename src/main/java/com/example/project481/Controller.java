@@ -85,8 +85,25 @@ public class Controller {
         else if (result != null) {
             dragState = DragState.IDLE;
             System.out.println(menuMode + " " + result.getText());
-            model.toggleMenuOpen();
-            model.publishMenuItems();
+            if (result.isBaseItem()) {
+                if (!model.getMenu().hasPreviousMenu()) model.toggleMenuOpen();
+                else {
+                    while (model.getMenu().hasPreviousMenu())
+                        model.setMenu(model.getMenu().getPreviousMenu());
+
+                    model.closeMenu();
+                }
+            }
+
+            else {
+                if (result.hasSubMenu()) model.setMenu(result.getSubMenu());
+                else {
+                    while (model.getMenu().hasPreviousMenu())
+                        model.setMenu(model.getMenu().getPreviousMenu());
+
+                    model.closeMenu();
+                }
+            }
         }
     }
 

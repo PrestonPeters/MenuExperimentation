@@ -7,6 +7,7 @@ import static java.lang.Math.sqrt;
 
 public class Menu {
     private ArrayList<MenuItem> menuItems;
+    private Menu previousMenu;
     private boolean isOpen;
 
     public Menu(int numMenuItems) {
@@ -14,7 +15,14 @@ public class Menu {
         for (int i = 0;  i <= numMenuItems; i++)
             menuItems.add(new MenuItem("Item " + i, (i == 0)));
         isOpen = false;
+        previousMenu = null;
     }
+
+    public boolean hasPreviousMenu() { return previousMenu != null; }
+
+    public Menu getPreviousMenu() { return previousMenu; }
+
+    public void setPreviousMenu(Menu menu) { previousMenu = menu; }
 
     public ArrayList<MenuItem> getMenuItems() {
         if (!isOpen){
@@ -37,7 +45,7 @@ public class Menu {
             case LINEAR:
             case SCROLL:
                 for (MenuItem item : menuItems) ((LinearMenuItem) item).moveUp();
-                double lastY = ((LinearMenuItem) menuItems.get(menuItems.size() - 1)).getY();
+                double lastY = menuItems.get(menuItems.size() - 1).getY();
                 menuItems.add(new LinearMenuItem(text, (menuItems.isEmpty()), 350, lastY + 50, 100, 50));
                 break;
             case RADIAL:
@@ -50,7 +58,7 @@ public class Menu {
         }
     }
 
-    public void changeMenuMode(Controller.MenuMode mode){
+    public void changeMenuMode(Controller.MenuMode mode) {
         switch (mode) {
             case LINEAR:
             case SCROLL:
@@ -67,8 +75,25 @@ public class Menu {
 
             case RADIAL:
                 menuItems.set(0, new RadialMenuItem(true, "Close", 0, 150, 50, 400, 400, menuItems.size() - 1));
-                for (int i = 1;  i < menuItems.size(); i++)
-                    menuItems.set(i, new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1));
+                for (int i = 1;  i < menuItems.size(); i++) {
+                    RadialMenuItem radialItem = new RadialMenuItem(false, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1);
+
+                    if (i <= 4) {
+                        Menu subMenu = new Menu(8);
+                        subMenu.open();
+                        subMenu.setPreviousMenu(this);
+                        RadialMenuItem baseItem = new RadialMenuItem(true, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1);
+                        subMenu.getMenuItems().set(0, baseItem);
+                        for (int x = 1; x < subMenu.getMenuItems().size(); x++) {
+                            RadialMenuItem newItem = new RadialMenuItem(false, "Item " + (i + x), x, 150, 50, 400, 400, menuItems.size() - 1);
+                            subMenu.getMenuItems().set(x, newItem);
+                        }
+
+                        radialItem.setSubMenu(subMenu);
+                    }
+
+                    menuItems.set(i, radialItem);
+                }
                 break;
 
             case GRID:
