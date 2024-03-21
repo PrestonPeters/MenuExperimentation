@@ -3,6 +3,8 @@ package com.example.project481;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import java.util.ArrayList;
 
 public class Controller {
     InteractionModel iModel;
@@ -30,7 +32,7 @@ public class Controller {
     }
 
     public void handleMouseMoved(MouseEvent e) {
-        iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
+        if (menuMode != MenuMode.SCROLL) iModel.setHovering(model.checkForHit(e.getX(), e.getY()));
     }
 
     public void handleMouseDragged(MouseEvent e) {
@@ -54,15 +56,36 @@ public class Controller {
     }
 
     public void handleMouseReleased(MouseEvent e) {
-        MenuItem result = model.checkForHit(e.getX(), e.getY());
+        MenuItem result;
+        if (menuMode == MenuMode.SCROLL) {
+            if (keyState == KeyState.CTRL_HELD) {
+                if (!model.getMenu().isOpen()) {
+                    model.toggleMenuOpen();
+                    LinearMenuItem item = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
+                    iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
+                    ScrollBar scrollBar = iModel.getScrollBar();
+                    iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+                }
+
+                else {
+                    ScrollBar scrollBar = iModel.getScrollBar();
+                    result = model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY());
+                    System.out.println(menuMode + " " + result.getText());
+                    model.toggleMenuOpen();
+                    iModel.resetScrollAndHovering();
+                }
+            }
+            return;
+        }
+
+        result = model.checkForHit(e.getX(), e.getY());
         if (menuMode == MenuMode.RADIAL && dragState == DragState.DRAGGING)
             dragState = DragState.IDLE;
 
         else if (result != null) {
             dragState = DragState.IDLE;
             System.out.println(menuMode + " " + result.getText());
-            if (result.isBaseItem() && !model.getMenu().isOpen()) model.getMenu().open();
-            else if (result.isBaseItem() && model.getMenu().isOpen()) model.getMenu().close();
+            model.toggleMenuOpen();
             model.publishMenuItems();
         }
     }
@@ -70,16 +93,19 @@ public class Controller {
     public void handleKeyPressed(KeyEvent event) {
         switch (keyState) {
             case NO_CTRL:
-                if (event.getCode() == KeyCode.CONTROL) keyState = KeyState.CTRL_HELD;
+                if (event.getCode() == KeyCode.CONTROL) {
+                    keyState = KeyState.CTRL_HELD;
+                    if (menuMode == MenuMode.SCROLL) {
+                        ScrollBar scrollBar = iModel.getScrollBar();
+                        if (scrollBar == null) iModel.setHovering(model.getItemAtIndex(0));
+                        else iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+                    }
+                }
 
-                else if (menuMode == MenuMode.SCROLL) {
-                    if (event.getCode().isDigitKey() &&
-                            event.getCode() != KeyCode.DIGIT0) {
-                        // STUB - IN HERE, SELECT THE MENU OPTION CORRESPONDING
-                        // TO THE DIGIT THAT WAS INPUT. 1 CORRESPONDS TO INDEX 0
-                        // AND SO ON ALL THE WAY THROUGH UNTIL 9
-                        int keyCodeToIndex = event.getCode().getCode() - 49;
-                        System.out.println(keyCodeToIndex);
+                else if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
+                    if (event.getCode().isDigitKey() && event.getCode() != KeyCode.DIGIT0) {
+                        MenuItem result = model.getItemAtIndex(event.getCode().getCode() - 49);
+                        iModel.setHovering(result);
                     }
                 }
                 dragState = DragState.IDLE;
@@ -109,7 +135,11 @@ public class Controller {
 
                     iModel.setMenuMode(menuMode);
                     model.setMenuItems(menuMode);
+                    model.closeMenu();
+                    iModel.resetScrollAndHovering();
+                    if (menuMode == MenuMode.SCROLL) iModel.setHovering(model.getItemAtIndex(0));
                 }
+
                 dragState = DragState.IDLE;
         }
     }
@@ -117,10 +147,35 @@ public class Controller {
     // Responsible for updating the keyState. Currently, the only keyStates are
     // NO_CTRL if the Control key is not held down and CTRL_HELD otherwise.
     public void handleKeyReleased(KeyEvent event) {
-        if (event.getCode() == KeyCode.CONTROL) keyState = KeyState.NO_CTRL;
+        if (event.getCode() == KeyCode.CONTROL) {
+            keyState = KeyState.NO_CTRL;
+            if (menuMode == MenuMode.SCROLL) iModel.setHovering(null);
+        }
+
+        else if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
+            if (event.getCode().isDigitKey() && event.getCode() != KeyCode.DIGIT0) {
+                MenuItem result = model.getItemAtIndex(event.getCode().getCode() - 49);
+                System.out.println(menuMode + " " + result.getText());
+                model.toggleMenuOpen();
+                iModel.resetScrollAndHovering();
+            }
+
+            else {
+                ScrollBar scrollBar = iModel.getScrollBar();
+                iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+            }
+        }
     }
 
-    public void handleScrollEvent() {
-
+    public void handleScrollEvent(ScrollEvent event) {
+        if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
+            ScrollBar scrollBar = iModel.getScrollBar();
+            LinearMenuItem firstItem = (LinearMenuItem) model.getMenu().getMenuItems().get(0);
+            int lastIndex = model.getMenu().getMenuItems().size() - 1;
+            LinearMenuItem lastItem = (LinearMenuItem) model.getMenu().getMenuItems().get(lastIndex);
+            iModel.moveScrollBar(event.getDeltaY(), firstItem.getY(),
+                    lastItem.getY() + lastItem.getItemHeight(), firstItem.getItemHeight());
+            iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+        }
     }
 }

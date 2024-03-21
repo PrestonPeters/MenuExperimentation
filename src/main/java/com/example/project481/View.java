@@ -23,6 +23,7 @@ public class View extends StackPane implements Subscriber {
     MenuItem hovering;
     Controller.MenuMode menuMode;
     ArrayList<MenuItem> menuItems;
+    ScrollBar scrollBar;
     private MenuModeLabel menuModeLabel;
     public View() {
         setFocusTraversable(true);
@@ -31,6 +32,8 @@ public class View extends StackPane implements Subscriber {
         this.menuMode = Controller.MenuMode.NONE;
         canvas = new Canvas(800, 800);
         gc = canvas.getGraphicsContext2D();
+        hovering = null;
+        scrollBar = null;
         this.getChildren().add(canvas);
         draw();
 
@@ -45,13 +48,16 @@ public class View extends StackPane implements Subscriber {
         this.setOnMouseReleased(controller::handleMouseReleased);
         this.setOnMouseMoved(controller::handleMouseMoved);
         this.setOnMouseDragged(controller::handleMouseDragged);
+        this.setOnScroll(controller::handleScrollEvent);
     }
 
     public void draw(){
         if (this.menuItems.isEmpty()) return;
         switch (menuMode) {
             case LINEAR:
-                menuModeLabel.setText("Linear menu selected");
+            case SCROLL:
+                menuModeLabel.setText((menuMode == Controller.MenuMode.LINEAR) ?
+                        "Linear menu selected" : "Scroll menu selected");
                 this.getChildren().add(menuModeLabel);
 
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
@@ -59,6 +65,7 @@ public class View extends StackPane implements Subscriber {
 
                 Pane linearMenuBox = new Pane();
                 setAlignment(linearMenuBox, Pos.TOP_LEFT);
+                int iterator = 1;
 
                 for (MenuItem item : menuItems) {
                     Pane tempPane = new Pane();
@@ -72,12 +79,27 @@ public class View extends StackPane implements Subscriber {
                     itemLabel.setPrefHeight(itemHeight); // Set explicit preferred size for the item label
 
                     tempPane.getChildren().addAll(menuItem, itemLabel); // Add the item container to the VBox
+
+                    if (menuMode == Controller.MenuMode.SCROLL && menuItems.size() > 1) {
+                        Label hotkeyLabel = new Label("#" + iterator);
+                        hotkeyLabel.setFont(new Font(18));
+                        hotkeyLabel.setAlignment(Pos.CENTER_LEFT);
+                        hotkeyLabel.setPrefWidth(itemWidth);
+                        hotkeyLabel.setPrefHeight(itemHeight);
+                        hotkeyLabel.setTranslateX(5);
+                        tempPane.getChildren().add(hotkeyLabel);
+                    }
+
                     tempPane.setTranslateX(((LinearMenuItem) item).getX());
                     tempPane.setTranslateY(((LinearMenuItem) item).getY());
                     linearMenuBox.getChildren().add(tempPane);
+
+                    iterator++;
                 }
 
-                this.getChildren().add(linearMenuBox); // Add the VBox to the layout
+                this.getChildren().add(linearMenuBox);
+
+                if (scrollBar != null) this.getChildren().add(scrollBar);
                 break;
 
             case RADIAL:
@@ -196,17 +218,14 @@ public class View extends StackPane implements Subscriber {
                 }
                 this.getChildren().add(gridMenuBox);
                 break;
-            case SCROLL:
-                menuModeLabel.setText("Scroll menu selected");
-                this.getChildren().add(menuModeLabel);
-                break;
+
             default:
                 menuModeLabel.setText("No menu mode selected");
                 this.getChildren().add(menuModeLabel);
         }
     }
 
-    public void receiveNotification(String channel, Object message){
+    public void receiveNotification(String channel, Object message) {
         switch (channel) {
             case "menuMode" -> {
                 // when menu mode changes
@@ -224,6 +243,12 @@ public class View extends StackPane implements Subscriber {
             case "hovering" -> {
                 this.getChildren().clear();
                 this.hovering = (MenuItem) message;
+                draw();
+            }
+
+            case "scrollBar" -> {
+                this.getChildren().clear();
+                this.scrollBar = (ScrollBar) message;
                 draw();
             }
         }

@@ -35,6 +35,7 @@ public class Menu {
     public void addMenuItem(String text, Controller.MenuMode menuMode) {
         switch (menuMode) {
             case LINEAR:
+            case SCROLL:
                 for (MenuItem item : menuItems) ((LinearMenuItem) item).moveUp();
                 double lastY = ((LinearMenuItem) menuItems.get(menuItems.size() - 1)).getY();
                 menuItems.add(new LinearMenuItem(text, (menuItems.isEmpty()), 350, lastY + 50, 100, 50));
@@ -45,13 +46,14 @@ public class Menu {
                         150, 50, 400, 400, menuItems.size()));
                 break;
             case GRID:
-            case SCROLL:
+                break;
         }
     }
 
     public void changeMenuMode(Controller.MenuMode mode){
         switch (mode) {
             case LINEAR:
+            case SCROLL:
                 int minVBoxHeight = (400 - menuItems.size()/2 * 50)-25; // where the top of the menu will be *change if size is not 800x800
                 int y = minVBoxHeight; // where each item will be placed within the menu
                 for (int i = 0;  i < menuItems.size(); i++) {
