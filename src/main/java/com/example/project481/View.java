@@ -25,6 +25,10 @@ public class View extends StackPane implements Subscriber {
     ArrayList<MenuItem> menuItems;
     ScrollBar scrollBar;
     private MenuModeLabel menuModeLabel;
+    
+    private Label promptLabel;
+    public String prompt;
+    
     public View() {
         setFocusTraversable(true);
         menuItems = new ArrayList<>();
@@ -34,11 +38,18 @@ public class View extends StackPane implements Subscriber {
         gc = canvas.getGraphicsContext2D();
         hovering = null;
         scrollBar = null;
-        this.getChildren().add(canvas);
+
+        prompt = "Placeholder";
+        promptLabel = new Label("Prompt Here: " + prompt);
+        promptLabel.setStyle("-fx-font-size: 24px;");
+        this.getChildren().addAll(canvas, promptLabel);
         draw();
 
         StackPane.setAlignment(menuModeLabel, Pos.BOTTOM_LEFT);
         StackPane.setMargin(menuModeLabel, new Insets(10));
+
+        StackPane.setAlignment(promptLabel, Pos.TOP_CENTER);
+        StackPane.setMargin(promptLabel, new Insets(50));
     }
 
     public void setUpEvents(Controller controller) {
@@ -58,7 +69,7 @@ public class View extends StackPane implements Subscriber {
             case SCROLL:
                 menuModeLabel.setText((menuMode == Controller.MenuMode.LINEAR) ?
                         "Linear menu selected" : "Scroll menu selected");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel, promptLabel);
 
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
@@ -104,7 +115,7 @@ public class View extends StackPane implements Subscriber {
 
             case RADIAL:
                 menuModeLabel.setText("Radial menu selected.");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel, promptLabel);
 
                 // The baseItem that is to be added in the center circle is initialized here.
                 Pane baseItemPane = new Pane();
@@ -167,7 +178,7 @@ public class View extends StackPane implements Subscriber {
 
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel, promptLabel);
                 itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
                 itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
 
@@ -221,7 +232,7 @@ public class View extends StackPane implements Subscriber {
 
             default:
                 menuModeLabel.setText("No menu mode selected");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel, promptLabel);
         }
     }
 
