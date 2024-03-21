@@ -82,10 +82,12 @@ public class Menu {
                         Menu subMenu = new Menu(8);
                         subMenu.open();
                         subMenu.setPreviousMenu(this);
-                        RadialMenuItem baseItem = new RadialMenuItem(true, "Item " + i, i, 150, 50, 400, 400, menuItems.size() - 1);
+                        RadialMenuItem baseItem = new RadialMenuItem(true, "Item " + i, 0,
+                                150, 50, 400, 400, menuItems.size() - 1);
                         subMenu.getMenuItems().set(0, baseItem);
                         for (int x = 1; x < subMenu.getMenuItems().size(); x++) {
-                            RadialMenuItem newItem = new RadialMenuItem(false, "Item " + (i + x), x, 150, 50, 400, 400, menuItems.size() - 1);
+                            RadialMenuItem newItem = new RadialMenuItem(false, "Item " + (i + x), x,
+                                    150, 50, 400, 400, menuItems.size() - 1);
                             subMenu.getMenuItems().set(x, newItem);
                         }
 

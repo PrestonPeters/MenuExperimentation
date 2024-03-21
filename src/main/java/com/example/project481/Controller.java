@@ -87,22 +87,15 @@ public class Controller {
             System.out.println(menuMode + " " + result.getText());
             if (result.isBaseItem()) {
                 if (!model.getMenu().hasPreviousMenu()) model.toggleMenuOpen();
-                else {
-                    while (model.getMenu().hasPreviousMenu())
-                        model.setMenu(model.getMenu().getPreviousMenu());
-
-                    model.closeMenu();
-                }
+                else model.setMenu(model.getMenu().getPreviousMenu());
             }
 
-            else {
-                if (result.hasSubMenu()) model.setMenu(result.getSubMenu());
-                else {
-                    while (model.getMenu().hasPreviousMenu())
-                        model.setMenu(model.getMenu().getPreviousMenu());
+            else if (result.hasSubMenu()) model.setMenu(result.getSubMenu());
 
-                    model.closeMenu();
-                }
+            else {
+                while (model.getMenu().hasPreviousMenu())
+                    model.setMenu(model.getMenu().getPreviousMenu());
+                model.closeMenu();
             }
         }
     }
