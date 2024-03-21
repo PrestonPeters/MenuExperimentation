@@ -90,8 +90,8 @@ public class View extends StackPane implements Subscriber {
                         tempPane.getChildren().add(hotkeyLabel);
                     }
 
-                    tempPane.setTranslateX(((LinearMenuItem) item).getX());
-                    tempPane.setTranslateY(((LinearMenuItem) item).getY());
+                    tempPane.setTranslateX(item.getX());
+                    tempPane.setTranslateY(item.getY());
                     linearMenuBox.getChildren().add(tempPane);
 
                     iterator++;
@@ -211,8 +211,8 @@ public class View extends StackPane implements Subscriber {
                         row.setTranslateY(gridY + i * itemHeight);
                         row.setTranslateX(gridX);
                     } else {
-                        row.setTranslateX(((GridMenuItem) menuItems.get(0)).getX());
-                        row.setTranslateY(((GridMenuItem) menuItems.get(0)).getY());
+                        row.setTranslateX(menuItems.get(0).getX());
+                        row.setTranslateY(menuItems.get(0).getY());
                     }
                     gridMenuBox.getChildren().add(row);
                 }
