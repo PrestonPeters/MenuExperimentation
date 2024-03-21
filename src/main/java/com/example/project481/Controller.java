@@ -96,8 +96,12 @@ public class Controller {
 
         else if (result.hasSubMenu()) {
             model.setMenu(result.getSubMenu());
-            if (menuMode == MenuMode.SCROLL)
-                iModel.setHovering(model.checkForHit(iModel.getScrollBar().getMiddleX(), iModel.getScrollBar().getMiddleY()));
+            if (menuMode == MenuMode.SCROLL) {
+                LinearMenuItem item = (LinearMenuItem) model.getItemAtIndex(0);
+                iModel.makeScrollBar(item.getX(), item.getY(), item.getItemWidth(), item.getItemHeight());
+                ScrollBar scrollBar = iModel.getScrollBar();
+                iModel.setHovering(model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY()));
+            }
         }
 
         else {
