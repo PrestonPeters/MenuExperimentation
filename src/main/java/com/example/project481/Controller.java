@@ -5,6 +5,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class Controller {
     InteractionModel iModel;
@@ -16,11 +17,13 @@ public class Controller {
     public enum KeyState { NO_CTRL, CTRL_HELD };
     public enum DragState { IDLE, ON_BASE_ITEM, DRAGGING };
     double xOffset, yOffset;
+    private long timer;
 
     public Controller() {
         menuMode = MenuMode.NONE;
         keyState = KeyState.NO_CTRL;
         dragState = DragState.IDLE;
+        this.timer = System.currentTimeMillis();
     }
 
     public void setModel(Model model){
@@ -74,8 +77,13 @@ public class Controller {
                     
                     // if hit on matching prompt
                     if (result.getText().equals(iModel.getPrompt().getCurrentPrompt())) {
-                        System.out.println("Hit Prompt");
+                        
+                        // timer information display
+                        long endTimer = System.currentTimeMillis();
+                        System.out.println("Time to hit: " + (endTimer - timer));
 
+                        // new prompt and reset timer
+                        timer = System.currentTimeMillis();
                         iModel.setNextPrompt();
                     }
                     
