@@ -70,9 +70,7 @@ public class Controller {
                 else {
                     ScrollBar scrollBar = iModel.getScrollBar();
                     result = model.checkForHit(scrollBar.getMiddleX(), scrollBar.getMiddleY());
-                    System.out.println(menuMode + " " + result.getText());
-                    model.toggleMenuOpen();
-                    iModel.resetScrollAndHovering();
+                    selectResult(result);
                 }
             }
             return;
@@ -82,21 +80,31 @@ public class Controller {
         if (menuMode == MenuMode.RADIAL && dragState == DragState.DRAGGING)
             dragState = DragState.IDLE;
 
-        else if (result != null) {
-            dragState = DragState.IDLE;
-            System.out.println(menuMode + " " + result.getText());
-            if (result.isBaseItem()) {
-                if (!model.getMenu().hasPreviousMenu()) model.toggleMenuOpen();
-                else model.setMenu(model.getMenu().getPreviousMenu());
-            }
+        else if (result != null) selectResult(result);
+    }
 
-            else if (result.hasSubMenu()) model.setMenu(result.getSubMenu());
-
-            else {
-                while (model.getMenu().hasPreviousMenu())
-                    model.setMenu(model.getMenu().getPreviousMenu());
-                model.closeMenu();
+    public void selectResult(MenuItem result) {
+        dragState = DragState.IDLE;
+        System.out.println(menuMode + " " + result.getText());
+        if (result.isBaseItem()) {
+            if (!model.getMenu().hasPreviousMenu()) {
+                model.toggleMenuOpen();
+                if (menuMode == MenuMode.SCROLL) iModel.resetScrollAndHovering();
             }
+            else model.setMenu(model.getMenu().getPreviousMenu());
+        }
+
+        else if (result.hasSubMenu()) {
+            model.setMenu(result.getSubMenu());
+            if (menuMode == MenuMode.SCROLL)
+                iModel.setHovering(model.checkForHit(iModel.getScrollBar().getMiddleX(), iModel.getScrollBar().getMiddleY()));
+        }
+
+        else {
+            while (model.getMenu().hasPreviousMenu())
+                model.setMenu(model.getMenu().getPreviousMenu());
+            model.closeMenu();
+            if (menuMode == MenuMode.SCROLL) iModel.resetScrollAndHovering();
         }
     }
 
@@ -165,9 +173,7 @@ public class Controller {
         else if (menuMode == MenuMode.SCROLL && model.getMenu().isOpen()) {
             if (event.getCode().isDigitKey() && event.getCode() != KeyCode.DIGIT0) {
                 MenuItem result = model.getItemAtIndex(event.getCode().getCode() - 49);
-                System.out.println(menuMode + " " + result.getText());
-                model.toggleMenuOpen();
-                iModel.resetScrollAndHovering();
+                selectResult(result);
             }
 
             else {

@@ -62,13 +62,29 @@ public class Menu {
         switch (mode) {
             case LINEAR:
             case SCROLL:
-                int minVBoxHeight = (400 - menuItems.size()/2 * 50)-25; // where the top of the menu will be *change if size is not 800x800
-                int y = minVBoxHeight; // where each item will be placed within the menu
+                int y = (400 - menuItems.size()/2 * 50)-25; // where each item will be placed within the menu
                 for (int i = 0;  i < menuItems.size(); i++) {
-                    menuItems.set(i, new LinearMenuItem("Item " + i, (i == 0), 350, y, 100, 50));
-                    if (i==0){
-                        menuItems.get(i).setText("Close");
+                    LinearMenuItem linearItem = new LinearMenuItem("Item " + i, (i == 0), 350, y, 100, 50);
+
+                    if (i==0) menuItems.get(i).setText("Close");
+
+                    else if (i < 5) {
+                        Menu subMenu = new Menu(8);
+                        subMenu.open();
+                        subMenu.setPreviousMenu(this);
+
+                        int subMenuY = (400 - menuItems.size()/2 * 50)-25;
+
+                        for (int x = 0; x < subMenu.getMenuItems().size(); x++) {
+                            LinearMenuItem subMenuItem = new LinearMenuItem("Item " + (i * 8 + x), (x == 0), 350, subMenuY, 100, 50);
+                            if (x == 0) subMenuItem.setText("Back");
+                            subMenu.getMenuItems().set(x, subMenuItem);
+                            subMenuY += 50;
+                        }
+
+                        linearItem.setSubMenu(subMenu);
                     }
+                    menuItems.set(i, linearItem);
                     y += 50;
                 }
                 break;
@@ -82,11 +98,11 @@ public class Menu {
                         Menu subMenu = new Menu(8);
                         subMenu.open();
                         subMenu.setPreviousMenu(this);
-                        RadialMenuItem baseItem = new RadialMenuItem(true, "Item " + i, 0,
+                        RadialMenuItem baseItem = new RadialMenuItem(true, "Back", 0,
                                 150, 50, 400, 400, menuItems.size() - 1);
                         subMenu.getMenuItems().set(0, baseItem);
                         for (int x = 1; x < subMenu.getMenuItems().size(); x++) {
-                            RadialMenuItem newItem = new RadialMenuItem(false, "Item " + (i + x), x,
+                            RadialMenuItem newItem = new RadialMenuItem(false, "Item " + (i * 8 + x), x,
                                     150, 50, 400, 400, menuItems.size() - 1);
                             subMenu.getMenuItems().set(x, newItem);
                         }
@@ -133,7 +149,8 @@ public class Menu {
         isOpen = true;
         for (MenuItem item : menuItems) {
             if (item.isBaseItem()) {
-                item.setText("Close");
+                if (!hasPreviousMenu()) item.setText("Close");
+                else item.setText("Back");
             }
         }
     }
