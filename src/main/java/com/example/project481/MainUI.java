@@ -18,6 +18,9 @@ public class MainUI extends BorderPane {
         pubsub.addSubscriber("menuItems", view);
         pubsub.addSubscriber("hovering", view);
         pubsub.addSubscriber("scrollBar", view);
+        pubsub.addSubscriber("prompt", view);
+
+        iModel.makePrompt();
 
         this.setCenter(view);
     }

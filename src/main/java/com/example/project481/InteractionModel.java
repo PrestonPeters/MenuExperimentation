@@ -5,11 +5,15 @@ public class InteractionModel {
     Controller.MenuMode menuMode;
     MenuItem hovering;
     ScrollBar scrollBar;
+
+    Prompt promptHolder;
+
     public InteractionModel(PublishSubscribe pubsub) {
         this.pubsub = pubsub;
         pubsub.createChannel("menuMode");
         pubsub.createChannel("hovering");
         pubsub.createChannel("scrollBar");
+        pubsub.createChannel("prompt");
         hovering = null;
         scrollBar = null;
     }
@@ -47,5 +51,17 @@ public class InteractionModel {
         hovering = null;
         pubsub.publish("scrollBar", null);
         pubsub.publish("hovering", null);
+    }
+
+    public void makePrompt() {
+        promptHolder = new Prompt();
+        pubsub.publish("prompt", promptHolder);
+    }
+
+    public Prompt getPrompt() { return promptHolder; }
+
+    public void setNextPrompt() {
+        promptHolder.setNextPrompt();
+        pubsub.publish("prompt", promptHolder);
     }
 }

@@ -5,6 +5,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class Controller {
     InteractionModel iModel;
@@ -16,11 +17,13 @@ public class Controller {
     public enum KeyState { NO_CTRL, CTRL_HELD };
     public enum DragState { IDLE, ON_BASE_ITEM, DRAGGING };
     double xOffset, yOffset;
+    private long timer;
 
     public Controller() {
         menuMode = MenuMode.NONE;
         keyState = KeyState.NO_CTRL;
         dragState = DragState.IDLE;
+        this.timer = System.currentTimeMillis();
     }
 
     public void setModel(Model model){
@@ -79,6 +82,7 @@ public class Controller {
     public void selectResult(MenuItem result) {
         dragState = DragState.IDLE;
         System.out.println(menuMode + " " + result.getText());
+
         if (result.isBaseItem()) {
             if (!model.getMenu().hasPreviousMenu()) model.toggleMenuOpen();
             else model.setMenu(model.getMenu().getPreviousMenu());
@@ -87,6 +91,17 @@ public class Controller {
         else if (result.hasSubMenu()) model.setMenu(result.getSubMenu());
 
         else {
+            if (result.getText().equals(iModel.getPrompt().getCurrentPrompt())) {
+
+                // timer information display
+                long endTimer = System.currentTimeMillis();
+                System.out.println("Time to hit: " + (endTimer - timer));
+
+                // new prompt and reset timer
+                timer = System.currentTimeMillis();
+                iModel.setNextPrompt();
+            }
+
             while (model.getMenu().hasPreviousMenu())
                 model.setMenu(model.getMenu().getPreviousMenu());
             model.closeMenu();
@@ -141,15 +156,12 @@ public class Controller {
                         menuMode = MenuMode.GRID;
                     } else if (integerPressed == 4) {
                         menuMode = MenuMode.SCROLL;
-                    } else {
-                        // If the same key is pressed and the current menu mode matches it,
-                        // set menu mode to NONE
+                    } else
                         menuMode = MenuMode.NONE;
-                    }
 
+                    model.closeMenu();
                     iModel.setMenuMode(menuMode);
                     model.setMenuItems(menuMode);
-                    model.closeMenu();
                     iModel.resetScrollAndHovering();
                     if (menuMode == MenuMode.SCROLL) iModel.setHovering(model.getItemAtIndex(0));
                 }

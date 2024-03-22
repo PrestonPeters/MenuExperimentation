@@ -29,6 +29,9 @@ public class Model {
     }
 
     public void closeMenu() {
+        while (menu.hasPreviousMenu())
+            setMenu(menu.getPreviousMenu());
+
         menu.close();
         pubsub.publish("menuItems", menu);
     }

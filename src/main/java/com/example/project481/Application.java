@@ -7,7 +7,7 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) {
         Scene scene = new Scene(new MainUI(), 800, 800);
-        stage.setTitle("Hello!");
+        stage.setTitle("CMPT 481 Final Project!");
         stage.setScene(scene);
         stage.show();
     }
