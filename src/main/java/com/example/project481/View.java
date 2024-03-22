@@ -25,6 +25,10 @@ public class View extends StackPane implements Subscriber {
     ArrayList<MenuItem> menuItems;
     ScrollBar scrollBar;
     private MenuModeLabel menuModeLabel;
+    
+    Prompt prompt;
+    public Label promptLabel;
+    
     public View() {
         setFocusTraversable(true);
         menuItems = new ArrayList<>();
@@ -34,6 +38,8 @@ public class View extends StackPane implements Subscriber {
         gc = canvas.getGraphicsContext2D();
         hovering = null;
         scrollBar = null;
+        prompt = null;
+
         this.getChildren().add(canvas);
         draw();
 
@@ -52,13 +58,23 @@ public class View extends StackPane implements Subscriber {
     }
 
     public void draw(){
+        if (prompt != null) {
+    
+            promptLabel = new Label("Prompt Here: " + prompt.getCurrentPrompt());
+            promptLabel.setStyle("-fx-font-size: 24px;");
+            this.getChildren().addAll(promptLabel);
+
+            StackPane.setAlignment(promptLabel, Pos.TOP_CENTER);
+            StackPane.setMargin(promptLabel, new Insets(50));
+        }
+
         if (this.menuItems.isEmpty()) return;
         switch (menuMode) {
             case LINEAR:
             case SCROLL:
                 menuModeLabel.setText((menuMode == Controller.MenuMode.LINEAR) ?
                         "Linear menu selected" : "Scroll menu selected");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel);
 
                 double itemWidth = ((LinearMenuItem) menuItems.get(0)).getItemWidth();
                 double itemHeight = ((LinearMenuItem) menuItems.get(0)).getItemHeight();
@@ -104,7 +120,7 @@ public class View extends StackPane implements Subscriber {
 
             case RADIAL:
                 menuModeLabel.setText("Radial menu selected.");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel);
 
                 // The baseItem that is to be added in the center circle is initialized here.
                 Pane baseItemPane = new Pane();
@@ -167,7 +183,7 @@ public class View extends StackPane implements Subscriber {
 
             case GRID:
                 menuModeLabel.setText("Grid menu selected");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel);
                 itemWidth = ((GridMenuItem) menuItems.get(0)).getItemWidth();
                 itemHeight = ((GridMenuItem) menuItems.get(0)).getItemHeight();
 
@@ -221,7 +237,7 @@ public class View extends StackPane implements Subscriber {
 
             default:
                 menuModeLabel.setText("No menu mode selected");
-                this.getChildren().add(menuModeLabel);
+                this.getChildren().addAll(menuModeLabel);
         }
     }
 
@@ -249,6 +265,12 @@ public class View extends StackPane implements Subscriber {
             case "scrollBar" -> {
                 this.getChildren().clear();
                 this.scrollBar = (ScrollBar) message;
+                draw();
+            }
+
+            case "prompt" -> {
+                this.getChildren().clear();
+                this.prompt = (Prompt) message;
                 draw();
             }
         }
