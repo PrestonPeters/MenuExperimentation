@@ -115,6 +115,7 @@ public class Menu {
                 break;
 
             case GRID:
+                System.out.println("Working in here...");
                 int numCols = (int)Math.ceil(sqrt(menuItems.size()));
                 int numRows = (int)Math.ceil((double) menuItems.size() / numCols);
 
