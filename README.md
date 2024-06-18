@@ -20,21 +20,21 @@
   Linear Menu, then the Grid Menu, and lastly the Scroll/Hotkey-Based Menu. Through the experimentation, I have noted the following strengths and weaknesses:
 
   ## Strengths
-    1. The experimentation had a great deal of internal validity. There were no extraneous tasks and not many design elements that could confound the test results
-    2. The software itself never had any bugs or glitches that skewed the data as subjects were observed using the software
+   1. The experimentation had a great deal of internal validity. There were no extraneous tasks and not many design elements that could confound the test results
+   2. The software itself never had any bugs or glitches that skewed the data as subjects were observed using the software
 
   ## Weaknesses
-    1. The experimentation was severely lacking in external validity: the task was to select a menu item always followed by the next task being another menu item
-       selection. In a real world setting, users will likely perform many tasks between menu selections and this could have affected the data significantly for
-       menu types such as the Scroll/Hotkey-Based Menu which didn't need the user to move the cursor to target it and the Radial Menu which could be moved wherever
-       the user wanted it to be.
-    2. The experiment design was not informative enough to make the users familiar with the system prior to using it. Especially in the first couple of trials for
-       each menu type, the completion time was significantly more than later trials. Some of this can be explained away via models such as the Power Law of Practice,
-       but, as corroborated by users' comment on their experience, they were uncertain of how to use the system initially and struggled with the initial presentation
-       and lack of instruction for the Scroll/Hotkey-Based Menu.
-    3. The amount of trials performed was not enough to adequately improve the user for unfamiliar menu types. Whereas most users have used a Linear, Radial, and
-       sometimes even a Grid menu, most users have not used a Scroll/Hotkey-Based Menu and there is much data to support that unfamiliar interaction types are often
-       less preferable to users initially.
+   1. The experimentation was severely lacking in external validity: the task was to select a menu item always followed by the next task being another menu item
+      selection. In a real world setting, users will likely perform many tasks between menu selections and this could have affected the data significantly for
+      menu types such as the Scroll/Hotkey-Based Menu which didn't need the user to move the cursor to target it and the Radial Menu which could be moved wherever
+      the user wanted it to be.
+   2. The experiment design was not informative enough to make the users familiar with the system prior to using it. Especially in the first couple of trials for
+      each menu type, the completion time was significantly more than later trials. Some of this can be explained away via models such as the Power Law of Practice,
+      but, as corroborated by users' comment on their experience, they were uncertain of how to use the system initially and struggled with the initial presentation
+      and lack of instruction for the Scroll/Hotkey-Based Menu.
+   3. The amount of trials performed was not enough to adequately improve the user for unfamiliar menu types. Whereas most users have used a Linear, Radial, and
+      sometimes even a Grid menu, most users have not used a Scroll/Hotkey-Based Menu and there is much data to support that unfamiliar interaction types are often
+      less preferable to users initially.
      
 ## Prerequisites:
    To run this program, you will need the following:
