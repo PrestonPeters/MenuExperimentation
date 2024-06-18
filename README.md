@@ -20,8 +20,9 @@
   Linear Menu, then the Grid Menu, and lastly the Scroll/Hotkey-Based Menu. Through the experimentation, I have noted the following strengths and weaknesses:
 
   ## Strengths
-   1. The experimentation had a great deal of internal validity. There were no extraneous tasks and not many design elements that could confound the test results
-   2. The software itself never had any bugs or glitches that skewed the data as subjects were observed using the software
+  
+   - The experimentation had a great deal of internal validity. There were no extraneous tasks and not many design elements that could confound the test results
+   - The software itself never had any bugs or glitches that skewed the data as subjects were observed using the software
 
   ## Weaknesses
    1. The experimentation was severely lacking in external validity: the task was to select a menu item always followed by the next task being another menu item
