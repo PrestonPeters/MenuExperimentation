@@ -1,4 +1,5 @@
 ## Introduction
+
    This is my final project from my CMPT481 (Human Computer Interaction) class where myself and three collaborators were required to design a software product
    intended to test the performance of targeting tasks in regards to Fitts' Law, the Power Law of Practice, and overall user experience. Through this 
    experimentation, we attempted to determine the empirically best menu type for users based upon the data compared to the models we chose to examine and also
@@ -25,19 +26,21 @@
    - The software itself never had any bugs or glitches that skewed the data as subjects were observed using the software
 
   ## Weaknesses
-   1. The experimentation was severely lacking in external validity: the task was to select a menu item always followed by the next task being another menu item
-      selection. In a real world setting, users will likely perform many tasks between menu selections and this could have affected the data significantly for
-      menu types such as the Scroll/Hotkey-Based Menu which didn't need the user to move the cursor to target it and the Radial Menu which could be moved wherever
-      the user wanted it to be.
-   2. The experiment design was not informative enough to make the users familiar with the system prior to using it. Especially in the first couple of trials for
-      each menu type, the completion time was significantly more than later trials. Some of this can be explained away via models such as the Power Law of Practice,
-      but, as corroborated by users' comment on their experience, they were uncertain of how to use the system initially and struggled with the initial presentation
-      and lack of instruction for the Scroll/Hotkey-Based Menu.
-   3. The amount of trials performed was not enough to adequately improve the user for unfamiliar menu types. Whereas most users have used a Linear, Radial, and
-      sometimes even a Grid menu, most users have not used a Scroll/Hotkey-Based Menu and there is much data to support that unfamiliar interaction types are often
-      less preferable to users initially.
+  
+   - The experimentation was severely lacking in external validity: the task was to select a menu item always followed by the next task being another menu item
+     selection. In a real world setting, users will likely perform many tasks between menu selections and this could have affected the data significantly for
+     menu types such as the Scroll/Hotkey-Based Menu which didn't need the user to move the cursor to target it and the Radial Menu which could be moved wherever
+     the user wanted it to be.
+   - The experiment design was not informative enough to make the users familiar with the system prior to using it. Especially in the first couple of trials for
+     each menu type, the completion time was significantly more than later trials. Some of this can be explained away via models such as the Power Law of Practice,
+     but, as corroborated by users' comment on their experience, they were uncertain of how to use the system initially and struggled with the initial presentation
+     and lack of instruction for the Scroll/Hotkey-Based Menu.
+   - The amount of trials performed was not enough to adequately improve the user for unfamiliar menu types. Whereas most users have used a Linear, Radial, and
+     sometimes even a Grid menu, most users have not used a Scroll/Hotkey-Based Menu and there is much data to support that unfamiliar interaction types are often
+     less preferable to users initially.
      
 ## Prerequisites:
+
    To run this program, you will need the following:
      1. A JDK of 17.0.11 or higher for compatibility (Download here at https://www.oracle.com/ca-en/java/technologies/downloads/)
      2. The JavaFX library (Download here at https://openjfx.io/ or install through your IDE if you use VS Code, Eclipse, IntelliJ Idea, or NetBeans)
