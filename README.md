@@ -42,8 +42,9 @@
 ## Prerequisites:
 
    To run this program, you will need the following:
-     1. A JDK of 17.0.11 or higher for compatibility (Download here at https://www.oracle.com/ca-en/java/technologies/downloads/)
-     2. The JavaFX library (Download here at https://openjfx.io/ or install through your IDE if you use VS Code, Eclipse, IntelliJ Idea, or NetBeans)
+   
+   1. A JDK of 17.0.11 or higher for compatibility (Download here at https://www.oracle.com/ca-en/java/technologies/downloads/)
+   2. The JavaFX library (Download here at https://openjfx.io/ or install through your IDE if you use VS Code, Eclipse, IntelliJ Idea, or NetBeans)
 
 ## Running Instructions
 
