@@ -38,13 +38,13 @@
      
 ## Prerequisites:
    To run this program, you will need the following:
-     - A JDK of 17.0.11 or higher for compatibility (Download here at https://www.oracle.com/ca-en/java/technologies/downloads/)
-     - The JavaFX library (Download here at https://openjfx.io/ or install through your IDE if you use VS Code, Eclipse, IntelliJ Idea, or NetBeans)
+     1. A JDK of 17.0.11 or higher for compatibility (Download here at https://www.oracle.com/ca-en/java/technologies/downloads/)
+     2. The JavaFX library (Download here at https://openjfx.io/ or install through your IDE if you use VS Code, Eclipse, IntelliJ Idea, or NetBeans)
 
 ## Running Instructions
 
    1. Clone the repository to your desired directory by navigating to your desired directory via the command line. Then, run the following command to clone the repo:
-         git clone https://github.com/PrestonPeters/MenuExperimentation.git
+         `git clone https://github.com/PrestonPeters/MenuExperimentation.git`
    2. Open the MenuExperimentation folder in an IDE that supports JavaFX
    3. Find the file Application.java in the folder MenuExperimentation/src/main/java/com/example/project481 and run it
    4. When finished with the program, exit by simply clicking the exit button at the top right of the JavaFX popup window
