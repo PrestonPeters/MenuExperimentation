@@ -1,93 +1,50 @@
-# 481_project
+## Introduction
+   This is my final project from my CMPT481 (Human Computer Interaction) class where myself and three collaborators were required to design a software product
+   intended to test the performance of targeting tasks in regards to Fitts' Law, the Power Law of Practice, and overall user experience. Through this 
+   experimentation, we attempted to determine the empirically best menu type for users based upon the data compared to the models we chose to examine and also
+   the qualitative data that we gathered by giving the users questionnaires. The software itself is designed to randomly select menu items that a user must click 
+   on and there are four different menu options that the user must perform these tasks in:
+      1. Linear Menu - This menu served as our baseline as it is very standard across various applications that are PC based and lend themselves to the use of
+         the mouse as a cursor.
+      2. Radial Menu - This menu was used as a common alternative to the Linear Menu that is familiar to most users, especially those that play video games, but
+         is less commonly used in a PC setting.
+      3. Grid Menu - This menu is also a relatively common alternative to the Linear Menu, but is less commonly used. Its form and function are similar to the
+         Linear Menu, but presents the user with more options initially.
+      4. Scroll/Hotkey-Based Menu - This menu was a bit more on the experimental side of things. The idea behind it was that using the CTRL+Scroll functionality
+         and hotkeys (assigned to numbers on the keyboard), the user would not actually have to move the cursor over to the menu and could open and use the menu
+         from anywhere in the application after opening the menu via CTRL+Left-Click.
 
+  Our experimental design had our subjects running through 41 trials for each menu type where they are given random prompts as to what menu item to find and click.
+  Then, after they performed all trials for all menu types, the data was collected by the experimenter and the subject was given a questionnaire to complete regarding
+  their experience with all of the menus. Through our experimentation, we determined that, at least in this context, the Radial Menu performed best, followed by the
+  Linear Menu, then the Grid Menu, and lastly the Scroll/Hotkey-Based Menu. Through the experimentation, I have noted the following strengths and weaknesses:
 
+  ## Strengths
+    1. The experimentation had a great deal of internal validity. There were no extraneous tasks and not many design elements that could confound the test results
+    2. The software itself never had any bugs or glitches that skewed the data as subjects were observed using the software
 
-## Getting started
+  ## Weaknesses
+    1. The experimentation was severely lacking in external validity: the task was to select a menu item always followed by the next task being another menu item
+       selection. In a real world setting, users will likely perform many tasks between menu selections and this could have affected the data significantly for
+       menu types such as the Scroll/Hotkey-Based Menu which didn't need the user to move the cursor to target it and the Radial Menu which could be moved wherever
+       the user wanted it to be.
+    2. The experiment design was not informative enough to make the users familiar with the system prior to using it. Especially in the first couple of trials for
+       each menu type, the completion time was significantly more than later trials. Some of this can be explained away via models such as the Power Law of Practice,
+       but, as corroborated by users' comment on their experience, they were uncertain of how to use the system initially and struggled with the initial presentation
+       and lack of instruction for the Scroll/Hotkey-Based Menu.
+    3. The amount of trials performed was not enough to adequately improve the user for unfamiliar menu types. Whereas most users have used a Linear, Radial, and
+       sometimes even a Grid menu, most users have not used a Scroll/Hotkey-Based Menu and there is much data to support that unfamiliar interaction types are often
+       less preferable to users initially.
+     
+## Prerequisites:
+   To run this program, you will need the following:
+     - A JDK of 17.0.11 or higher for compatibility (Download here at https://www.oracle.com/ca-en/java/technologies/downloads/)
+     - The JavaFX library (Download here at https://openjfx.io/ or install through your IDE if you use VS Code, Eclipse, IntelliJ Idea, or NetBeans)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Running Instructions
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.cs.usask.ca/ccj670/481_project.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.cs.usask.ca/ccj670/481_project/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+   1. Clone the repository to your desired directory by navigating to your desired directory via the command line. Then, run the following command to clone the repo:
+         git clone https://github.com/PrestonPeters/MenuExperimentation.git
+   2. Open the MenuExperimentation folder in an IDE that supports JavaFX
+   3. Find the file Application.java in the folder MenuExperimentation/src/main/java/com/example/project481 and run it
+   4. When finished with the program, exit by simply clicking the exit button at the top right of the JavaFX popup window
